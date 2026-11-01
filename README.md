@@ -8,7 +8,7 @@ O escopo completo, as regras de negócio, as telas e o plano de sprints estão n
 
 ## Estado atual
 
-Sprints 1 e 2 concluídas: o projeto lê as configurações do `.env`, usa PostgreSQL, tem idioma e fuso de São Paulo e roda em container (Docker Compose), com gunicorn e WhiteNoise prontos para produção. As telas e os atendimentos entram nas próximas sprints.
+Sprints 1 a 3 concluídas: o projeto lê as configurações do `.env`, usa PostgreSQL, tem idioma e fuso de São Paulo e roda em container (Docker Compose), com gunicorn e WhiteNoise prontos para produção. O model `Ticket` (atendimento) já existe com as regras de status e data de conclusão, e pode ser consultado e corrigido pelo admin. As telas entram nas próximas sprints.
 
 ## Requisitos
 
@@ -90,6 +90,15 @@ Ao iniciar, o container executa o `entrypoint.sh`, que: espera o PostgreSQL fica
 O container usa o mesmo `.env`, mas troca o host do banco para `db` (nome do serviço no Compose). Por isso o `DATABASE_URL` do `.env` continua apontando para `localhost`, que é o que o `.venv` local usa.
 
 Os arquivos estáticos coletados ficam em `staticfiles/` (ignorado pelo Git) e são servidos pelo WhiteNoise.
+
+## Admin
+
+O admin do Django fica em http://localhost:8000/admin/ e só abre para o superusuário. Em "Atendimentos" ele lista cada atendimento com cliente, assunto, status, data de abertura e data de conclusão.
+
+- Busca: o campo de pesquisa procura no cliente e no assunto (por exemplo, `Padaria` ou `contrato`).
+- Filtro: a barra lateral filtra por status (Pendente, Em andamento, Concluído).
+- Correções: dá para editar qualquer campo. A data de conclusão é só leitura e segue a mesma regra das telas: é gravada ao concluir e apagada ao reabrir.
+- Exclusão: excluir um atendimento só é possível pelo admin. As telas do Pytende não têm botão de exclusão.
 
 ## Testes
 

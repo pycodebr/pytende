@@ -55,6 +55,7 @@ DJANGO_APPS = [
 
 LOCAL_APPS = [
     'base',
+    'tickets',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS

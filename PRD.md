@@ -1161,25 +1161,25 @@ Regras para todas as sprints:
 
 **Objetivo:** model `Ticket` com todas as regras de negócio, migration e admin, com testes.
 
-- [ ] Em `base/models.py`, criar `BaseModel` conforme a seção 8.6.
-- [ ] Rodar `python manage.py startapp tickets` e acrescentar `'tickets'` em `LOCAL_APPS`.
-- [ ] Em `tickets/apps.py`, definir `verbose_name = 'Atendimentos'`.
-- [ ] Em `tickets/models.py`, criar `TicketStatus` e `Ticket` com campos, `Meta`, `ordering`, índices e constraints da seção 8.6.
-- [ ] Implementar `_sync_completed_at()`, `clean()`, `save()`, `change_status()` e `__str__()` conforme a seção 8.7.
-- [ ] Rodar `python manage.py makemigrations tickets` e conferir que gera `tickets/migrations/0001_initial.py` com os dois índices e as duas constraints.
-- [ ] Rodar `python manage.py migrate`.
-- [ ] Criar `TicketAdmin` em `tickets/admin.py` conforme a seção 8.12.
-- [ ] Trocar `tickets/tests.py` pelo pacote `tickets/tests/` (com `__init__.py`).
-- [ ] Criar `tickets/tests/test_models.py` com T-30 a T-41.
-- [ ] Criar `tickets/tests/test_admin.py` com T-90 a T-92.
-- [ ] Atualizar o README com a seção "Admin" (`/admin/`, uso de busca e filtro, exclusão só pelo admin).
+- [X] Em `base/models.py`, criar `BaseModel` conforme a seção 8.6. Evidência: `BaseModel` abstrata com `created_at`/`updated_at` e `verbose_name` em português.
+- [X] Rodar `python manage.py startapp tickets` e acrescentar `'tickets'` em `LOCAL_APPS`. Evidência: `tests.py` de stub e `views.py` removidos (as views entram na Sprint 5).
+- [X] Em `tickets/apps.py`, definir `verbose_name = 'Atendimentos'`.
+- [X] Em `tickets/models.py`, criar `TicketStatus` e `Ticket` com campos, `Meta`, `ordering`, índices e constraints da seção 8.6.
+- [X] Implementar `_sync_completed_at()`, `clean()`, `save()`, `change_status()` e `__str__()` conforme a seção 8.7. Evidência: coberto por T-32 a T-36.
+- [X] Rodar `python manage.py makemigrations tickets` e conferir que gera `tickets/migrations/0001_initial.py` com os dois índices e as duas constraints. Evidência: `0001_initial.py` com `tickets_created_idx`, `tickets_status_created_idx`, `tickets_status_valid` e `tickets_completed_at_matches_status`.
+- [X] Rodar `python manage.py migrate`. Evidência: `Applying tickets.0001_initial... OK` no PostgreSQL do Compose.
+- [X] Criar `TicketAdmin` em `tickets/admin.py` conforme a seção 8.12.
+- [X] Trocar `tickets/tests.py` pelo pacote `tickets/tests/` (com `__init__.py`).
+- [X] Criar `tickets/tests/test_models.py` com T-30 a T-41. Evidência: 12 testes (T-30 a T-41) passando.
+- [X] Criar `tickets/tests/test_admin.py` com T-90 a T-92. Evidência: 3 testes (T-90 a T-92) passando; o T-92 usa POST real no formulário de alteração do admin.
+- [X] Atualizar o README com a seção "Admin" (`/admin/`, uso de busca e filtro, exclusão só pelo admin).
 
 **Testes da sprint:** T-30 a T-41, T-90 a T-92.
 
 **Definição de pronto:**
-- [ ] `python manage.py makemigrations --check --dry-run` não detecta mudanças pendentes.
-- [ ] `python manage.py test` passando (Sprints 1 a 3).
-- [ ] Nenhuma view, form ou admin escreve em `completed_at`.
+- [X] `python manage.py makemigrations --check --dry-run` não detecta mudanças pendentes. Evidência: `No changes detected`.
+- [X] `python manage.py test` passando (Sprints 1 a 3). Evidência: `Ran 19 tests ... OK`.
+- [X] Nenhuma view, form ou admin escreve em `completed_at`. Evidência: `completed_at` só aparece no model e em `readonly_fields`/`list_display` do admin (leitura).
 
 ### Sprint 4 - Design system e layout base
 
