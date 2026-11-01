@@ -1205,26 +1205,26 @@ Regras para todas as sprints:
 
 **Objetivo:** login, logout e a Lista de atendimentos (sem filtro), acessível só com login.
 
-- [ ] Rodar `python manage.py startapp accounts`; manter `apps.py`, `forms.py` (novo), `urls.py` (novo) e `tests.py`; apagar `models.py`, `admin.py`, `views.py` e `migrations/` gerados, porque o app não tem models.
-- [ ] Acrescentar `'accounts'` em `LOCAL_APPS`.
-- [ ] Criar `LoginForm` em `accounts/forms.py` (seção 8.10).
-- [ ] Criar `accounts/urls.py` com `login` e `logout` (seção 8.8).
-- [ ] Definir `LOGIN_URL`, `LOGIN_REDIRECT_URL` e `LOGOUT_REDIRECT_URL` (seção 8.14).
-- [ ] Criar `TicketListView` em `tickets/views.py`, por enquanto sem filtro (seção 8.9).
-- [ ] Criar `tickets/urls.py` com `app_name = 'tickets'` e o caminho `''` com nome `list`.
-- [ ] Atualizar `core/urls.py` com os `include` da seção 8.8.
-- [ ] Criar `templates/accounts/login.html` (seção 10.1).
-- [ ] Criar `templates/base_app.html` com a barra de navegação (wordmark e formulário de logout; o botão "Novo atendimento" entra na Sprint 6).
-- [ ] Criar `templates/tickets/ticket_list.html` com a tabela, as colunas da seção 10.2, os badges de status e o layout de cards no celular (o filtro, o estado vazio e as ações entram nas Sprints 7, 8 e 9; enquanto não há atendimentos, o card fica vazio sem texto).
-- [ ] Criar `accounts/tests.py` com T-10 a T-20 (T-13 e T-19 cobrindo só a lista nesta sprint).
-- [ ] Criar `tickets/tests/test_views_list.py` com T-60 e T-66.
-- [ ] Atualizar o README com a seção "Primeiro acesso" (criar o superusuário e entrar em `/login/`).
+- [X] Rodar `python manage.py startapp accounts`; manter `apps.py`, `forms.py` (novo), `urls.py` (novo) e `tests.py`; apagar `models.py`, `admin.py`, `views.py` e `migrations/` gerados, porque o app não tem models. Evidência: o app tem só `__init__.py`, `apps.py`, `forms.py`, `urls.py` e `tests.py`; `makemigrations --check` sem mudanças.
+- [X] Acrescentar `'accounts'` em `LOCAL_APPS`.
+- [X] Criar `LoginForm` em `accounts/forms.py` (seção 8.10).
+- [X] Criar `accounts/urls.py` com `login` e `logout` (seção 8.8).
+- [X] Definir `LOGIN_URL`, `LOGIN_REDIRECT_URL` e `LOGOUT_REDIRECT_URL` (seção 8.14).
+- [X] Criar `TicketListView` em `tickets/views.py`, por enquanto sem filtro (seção 8.9).
+- [X] Criar `tickets/urls.py` com `app_name = 'tickets'` e o caminho `''` com nome `list`.
+- [X] Atualizar `core/urls.py` com os `include` da seção 8.8.
+- [X] Criar `templates/accounts/login.html` (seção 10.1).
+- [X] Criar `templates/base_app.html` com a barra de navegação (wordmark e formulário de logout; o botão "Novo atendimento" entra na Sprint 6).
+- [X] Criar `templates/tickets/ticket_list.html` com a tabela, as colunas da seção 10.2, os badges de status e o layout de cards no celular (o filtro, o estado vazio e as ações entram nas Sprints 7, 8 e 9; enquanto não há atendimentos, o card fica vazio sem texto).
+- [X] Criar `accounts/tests.py` com T-10 a T-20 (T-13 e T-19 cobrindo só a lista nesta sprint). Evidência: 11 testes (T-10 a T-20) passando.
+- [X] Criar `tickets/tests/test_views_list.py` com T-60 e T-66.
+- [X] Atualizar o README com a seção "Primeiro acesso" (criar o superusuário e entrar em `/login/`).
 
 **Testes da sprint:** T-10 a T-20, T-60, T-66.
 
 **Definição de pronto:**
-- [ ] Acessar `/` sem login leva a `/login/?next=/`; entrar leva de volta a `/`.
-- [ ] `python manage.py test` passando (Sprints 1 a 5).
+- [X] Acessar `/` sem login leva a `/login/?next=/`; entrar leva de volta a `/`. Evidência: contra o app do Compose, `GET /` deu 302 para `/login/?next=/`; o POST de login com `next=/` deu 302 para `/`, e o `GET /` seguinte respondeu 200.
+- [X] `python manage.py test` passando (Sprints 1 a 5). Evidência: `Ran 34 tests ... OK`.
 
 ### Sprint 6 - Novo atendimento
 

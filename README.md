@@ -68,9 +68,22 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-O servidor sobe em http://127.0.0.1:8000/. Por enquanto só o admin do Django (http://127.0.0.1:8000/admin/) está disponível; as telas do Pytende chegam nas próximas sprints.
+O servidor sobe em http://127.0.0.1:8000/. Veja a seção "Primeiro acesso" abaixo.
 
 Não existe cadastro público: o único usuário do sistema é o criado com `createsuperuser`.
+
+## Primeiro acesso
+
+1. Crie o superusuário, que é o único usuário do sistema (o responsável):
+   ```bash
+   python manage.py createsuperuser                                   # com o .venv
+   docker compose run --rm app python manage.py createsuperuser       # ou dentro do container
+   ```
+2. Abra http://localhost:8000/. Sem login, qualquer página leva para a tela de login (`/login/?next=...`).
+3. Entre com o usuário e a senha criados. Depois do login você volta para a página que tinha pedido, ou para a Lista de atendimentos.
+4. Para sair, use o botão "Sair" na barra de navegação.
+
+Se errar o usuário ou a senha, a tela mostra "Usuário ou senha inválidos.", sem dizer qual dos dois está errado. A senha pode ser trocada pelo admin ou com `python manage.py changepassword <usuario>`.
 
 ## Rodando com Docker Compose
 

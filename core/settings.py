@@ -56,6 +56,7 @@ DJANGO_APPS = [
 
 LOCAL_APPS = [
     'base',
+    'accounts',
     'tickets',
 ]
 
@@ -147,6 +148,13 @@ STORAGES = {
         'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
     },
 }
+
+
+# Authentication
+
+LOGIN_URL = 'accounts:login'
+LOGIN_REDIRECT_URL = 'tickets:list'
+LOGOUT_REDIRECT_URL = 'accounts:login'
 
 
 # Messages: níveis do framework de mensagens mapeados para as classes do design system.

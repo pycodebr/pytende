@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block body_class %}page-app{% endblock %}
+
+{% block body %}
+<header class="navbar">
+    <a class="navbar__brand" href="{% url 'tickets:list' %}">Pytende</a>
+    <div class="navbar__actions">
+        <form method="post" action="{% url 'accounts:logout' %}">
+            {% csrf_token %}
+            <button class="btn btn--tertiary" type="submit">Sair</button>
+        </form>
+    </div>
+</header>
+<main class="container{% block container_class %}{% endblock %}">
+    {% include 'includes/messages.html' %}
+    {% block content %}{% endblock %}
+</main>
+{% endblock %}
