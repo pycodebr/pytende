@@ -1248,16 +1248,16 @@ Regras para todas as sprints:
 
 **Objetivo:** filtro na query string, filtro ativo marcado e estado vazio com atalho para cadastro.
 
-- [ ] Implementar em `TicketListView.get_queryset()` o filtro por `status` e em `get_context_data()` as chaves `current_status` e `status_filters` (seção 8.9).
-- [ ] Renderizar o filtro em `ticket_list.html` como na seção 9.4, com `aria-current="page"` no item ativo.
-- [ ] Renderizar os dois textos de estado vazio da seção 10.2, com o botão "Cadastrar atendimento" apontando para `tickets:create`.
-- [ ] Acrescentar T-61 a T-65 e T-67 em `tickets/tests/test_views_list.py`.
+- [X] Implementar em `TicketListView.get_queryset()` o filtro por `status` e em `get_context_data()` as chaves `current_status` e `status_filters` (seção 8.9). Evidência: valor fora de `TicketStatus.values` é tratado como "Todos". O contexto também traz `current_status_label`, usado no texto do estado vazio.
+- [X] Renderizar o filtro em `ticket_list.html` como na seção 9.4, com `aria-current="page"` no item ativo.
+- [X] Renderizar os dois textos de estado vazio da seção 10.2, com o botão "Cadastrar atendimento" apontando para `tickets:create`.
+- [X] Acrescentar T-61 a T-65 e T-67 em `tickets/tests/test_views_list.py`. Evidência: o T-60 passou a contar os badges (`badge--pending`), porque o rótulo "Pendente" agora também aparece no filtro.
 
 **Testes da sprint:** T-61 a T-65, T-67.
 
 **Definição de pronto:**
-- [ ] Recarregar `/?status=completed` no navegador mantém o filtro "Concluído" ativo.
-- [ ] `python manage.py test` passando (Sprints 1 a 7).
+- [X] Recarregar `/?status=completed` no navegador mantém o filtro "Concluído" ativo. Evidência: Chromium headless: depois do clique em "Concluído" e do reload, o link ativo (`aria-current="page"`) continua "Concluído" e o estado vazio mostra `Nenhum atendimento com status "Concluído".` com o botão "Cadastrar atendimento".
+- [X] `python manage.py test` passando (Sprints 1 a 7). Evidência: `Ran 49 tests ... OK`.
 
 ### Sprint 8 - Edição do atendimento
 

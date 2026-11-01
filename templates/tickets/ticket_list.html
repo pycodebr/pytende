@@ -7,6 +7,14 @@
     <h1 class="page-title">Atendimentos</h1>
 </div>
 
+<nav class="filters" aria-label="Filtrar por status">
+    <ul class="filters__list">
+        {% for filter in status_filters %}
+        <li><a class="filter" href="{{ filter.url }}"{% if filter.is_active %} aria-current="page"{% endif %}>{{ filter.label }}</a></li>
+        {% endfor %}
+    </ul>
+</nav>
+
 <div class="card card--table">
     {% if tickets %}
     <table class="table">
@@ -33,6 +41,15 @@
             {% endfor %}
         </tbody>
     </table>
+    {% else %}
+    <div class="empty-state">
+        {% if current_status %}
+        <p>Nenhum atendimento com status "{{ current_status_label }}".</p>
+        {% else %}
+        <p>Você ainda não tem atendimentos cadastrados.</p>
+        {% endif %}
+        <a class="btn btn--primary" href="{% url 'tickets:create' %}">Cadastrar atendimento</a>
+    </div>
     {% endif %}
 </div>
 {% endblock %}
