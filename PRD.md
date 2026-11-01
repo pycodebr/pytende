@@ -1281,19 +1281,19 @@ Regras para todas as sprints:
 
 **Objetivo:** troca de status em cada linha da lista por POST com CSRF, mantendo o filtro.
 
-- [ ] Criar `TicketStatusForm` em `tickets/forms.py` (seção 8.10).
-- [ ] Criar `TicketStatusUpdateView` com `http_method_names = ['post']`, validação de `next` e `handle_no_permission()` (seção 8.9), e o caminho `tickets/<int:pk>/status/` com nome `update_status`.
-- [ ] Acrescentar o formulário de status por linha em `ticket_list.html` (seção 10.2).
-- [ ] Acrescentar T-55 em `tickets/tests/test_forms.py`.
-- [ ] Criar `tickets/tests/test_views_status.py` com T-80 a T-86.
-- [ ] Criar `tickets/tests/test_urls.py` com T-87.
-- [ ] Ampliar T-13 com o POST anônimo em `/tickets/<pk>/status/` (CA-05).
+- [X] Criar `TicketStatusForm` em `tickets/forms.py` (seção 8.10).
+- [X] Criar `TicketStatusUpdateView` com `http_method_names = ['post']`, validação de `next` e `handle_no_permission()` (seção 8.9), e o caminho `tickets/<int:pk>/status/` com nome `update_status`. Evidência: `handle_no_permission()` usa `redirect_to_login(reverse('tickets:list'))`; `next` validado com `url_has_allowed_host_and_scheme`.
+- [X] Acrescentar o formulário de status por linha em `ticket_list.html` (seção 10.2). Evidência: a lista passa `status_choices` no contexto. Ajuste de layout no `app.css` (e na cópia do `design-system.html`): a partir de 1280px "Editar", select e "Atualizar" ficam numa linha, com largura mínima para Cliente e Assunto; de 1024px a 1279px quebram em duas linhas; no tablet ficam empilhados. Medido no Chromium headless com 6 atendimentos (um com assunto longo): a tabela cabe no card em 1440, 1280, 1279, 1024, 1023, 900 e 768px, e em 767px e 360px vira cards.
+- [X] Acrescentar T-55 em `tickets/tests/test_forms.py`.
+- [X] Criar `tickets/tests/test_views_status.py` com T-80 a T-86.
+- [X] Criar `tickets/tests/test_urls.py` com T-87.
+- [X] Ampliar T-13 com o POST anônimo em `/tickets/<pk>/status/` (CA-05).
 
 **Testes da sprint:** T-55, T-80 a T-87, T-13 ampliado.
 
 **Definição de pronto:**
-- [ ] Trocar o status em `/?status=pending` volta para `/?status=pending` com a mensagem.
-- [ ] `python manage.py test` passando (Sprints 1 a 9).
+- [X] Trocar o status em `/?status=pending` volta para `/?status=pending` com a mensagem. Evidência: Chromium headless: na lista filtrada por Pendente, trocar para "Em andamento" e clicar em "Atualizar" voltou para `/?status=pending`, com o filtro Pendente ativo, a mensagem `Status de "Cadastro pelo navegador" alterado para Em andamento.` e o atendimento fora da lista.
+- [X] `python manage.py test` passando (Sprints 1 a 9). Evidência: `Ran 65 tests ... OK`.
 
 ### Sprint 10 - Jornada principal, responsividade e segurança de produção
 

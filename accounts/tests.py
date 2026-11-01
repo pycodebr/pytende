@@ -68,6 +68,11 @@ class AuthTests(TestCase):
                 response = self.client.get(url)
                 self.assertRedirects(response, redirect, fetch_redirect_response=False)
 
+        response = self.client.post(f'/tickets/{self.ticket.pk}/status/', {'status': 'completed'})
+        self.assertRedirects(response, '/login/?next=/', fetch_redirect_response=False)
+        self.ticket.refresh_from_db()
+        self.assertEqual(self.ticket.status, 'pending')
+
     def test_login_redirects_to_next_url(self):
         response = self.client.post(
             '/login/?next=/%3Fstatus%3Dpending',

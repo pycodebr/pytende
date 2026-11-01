@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from tickets.forms import TicketCreateForm, TicketUpdateForm
+from tickets.forms import TicketCreateForm, TicketStatusForm, TicketUpdateForm
 
 
 class TicketFormTests(TestCase):
@@ -59,3 +59,11 @@ class TicketFormTests(TestCase):
             with self.subTest(status=status):
                 valid = TicketUpdateForm(data={'client': 'Cliente', 'subject': 'Assunto', 'status': status})
                 self.assertTrue(valid.is_valid(), valid.errors)
+
+    def test_status_form_rejects_unknown_status(self):
+        form = TicketStatusForm({'status': 'archived'})
+
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['status'], ['Status inválido.'])
+        self.assertFalse(TicketStatusForm({}).is_valid())
+        self.assertEqual(TicketStatusForm({}).errors['status'], ['Status inválido.'])

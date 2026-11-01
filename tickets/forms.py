@@ -1,6 +1,6 @@
 from django import forms
 
-from tickets.models import Ticket
+from tickets.models import Ticket, TicketStatus
 
 
 class TicketCreateForm(forms.ModelForm):
@@ -27,3 +27,13 @@ class TicketUpdateForm(TicketCreateForm):
         fields = ['client', 'subject', 'description', 'status']
         labels = {**TicketCreateForm.Meta.labels, 'status': 'Status'}
         widgets = {**TicketCreateForm.Meta.widgets, 'status': forms.Select}
+
+
+class TicketStatusForm(forms.Form):
+    status = forms.ChoiceField(
+        choices=TicketStatus.choices,
+        error_messages={
+            'required': 'Status inválido.',
+            'invalid_choice': 'Status inválido.',
+        },
+    )

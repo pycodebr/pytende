@@ -327,6 +327,7 @@ textarea:focus-visible {
     text-align: left;
     text-transform: uppercase;
     color: var(--color-body);
+    white-space: nowrap;
     background: var(--color-canvas-soft);
 }
 
@@ -343,7 +344,11 @@ textarea:focus-visible {
     font: var(--text-body-sm);
     vertical-align: middle;
     border-bottom: var(--border-width) solid var(--color-canvas-soft);
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
+}
+
+.table__actions {
+    width: 1%;
 }
 
 .table tr:last-child td {
@@ -355,7 +360,7 @@ textarea:focus-visible {
 }
 
 .table__date {
-    white-space: nowrap;
+    white-space: normal;
 }
 
 .table__empty-date {
@@ -364,9 +369,14 @@ textarea:focus-visible {
 
 .row-actions {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
     gap: var(--space-sm);
+}
+
+.row-actions .btn {
+    padding-right: var(--space-lg);
+    padding-left: var(--space-lg);
 }
 
 .status-form {
@@ -470,10 +480,31 @@ textarea:focus-visible {
     font-weight: 400;
 }
 
+@media (min-width: 1280px) {
+    .table__client {
+        min-width: calc(var(--space-2xl) * 4);
+    }
+
+    .table__subject {
+        min-width: calc(var(--space-2xl) * 5);
+    }
+}
+
+/* ---------- Desktop estreito: 1024px a 1279px ---------- */
+
+@media (max-width: 1279px) {
+    /* "Editar" e o formulário de status quebram em duas linhas para sobrar
+       espaço para Cliente e Assunto. */
+    .row-actions {
+        flex-wrap: wrap;
+    }
+}
+
 /* ---------- Tablet: 768px a 1023px ---------- */
 
 @media (max-width: 1023px) {
-    .table__date {
+    .table__date,
+    .table th {
         white-space: normal;
     }
 
@@ -488,11 +519,13 @@ textarea:focus-visible {
     }
 
     .status-form {
-        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: stretch;
     }
 
+    .row-actions .btn,
     .status-form .input {
-        flex: 1 1 auto;
+        width: 100%;
         min-width: 0;
     }
 }
@@ -575,6 +608,7 @@ textarea:focus-visible {
     .table td {
         padding: var(--space-xs) 0;
         border-bottom: 0;
+        overflow-wrap: anywhere;
     }
 
     .table td + td {

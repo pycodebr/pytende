@@ -1,9 +1,14 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import redirect_to_login
 from django.contrib.messages.views import SuccessMessageMixin
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
+from django.utils.http import url_has_allowed_host_and_scheme
+from django.views import View
 from django.views.generic import CreateView, ListView, UpdateView
 
-from tickets.forms import TicketCreateForm, TicketUpdateForm
+from tickets.forms import TicketCreateForm, TicketStatusForm, TicketUpdateForm
 from tickets.models import Ticket, TicketStatus
 
 
@@ -39,6 +44,7 @@ class TicketListView(LoginRequiredMixin, ListView):
             }
             for value, label in options
         ]
+        context['status_choices'] = TicketStatus.choices
         return context
 
 
@@ -78,3 +84,34 @@ class TicketUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context['saved_dates'] = self.saved_dates
         return context
+
+
+class TicketStatusUpdateView(LoginRequiredMixin, View):
+    http_method_names = ['post']
+
+    def handle_no_permission(self):
+        # Depois do login, voltar para esta rota (só POST) daria 405.
+        return redirect_to_login(reverse('tickets:list'))
+
+    def post(self, request, pk):
+        ticket = get_object_or_404(Ticket, pk=pk)
+        form = TicketStatusForm(request.POST)
+        if form.is_valid():
+            ticket.change_status(form.cleaned_data['status'])
+            messages.success(
+                request,
+                f'Status de "{ticket.subject}" alterado para {ticket.get_status_display()}.',
+            )
+        else:
+            messages.error(request, 'Status inválido. Nenhuma alteração foi feita.')
+        return redirect(self.get_success_url())
+
+    def get_success_url(self):
+        next_url = self.request.POST.get('next', '')
+        if url_has_allowed_host_and_scheme(
+            next_url,
+            allowed_hosts={self.request.get_host()},
+            require_https=self.request.is_secure(),
+        ):
+            return next_url
+        return reverse('tickets:list')

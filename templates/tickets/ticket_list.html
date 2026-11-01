@@ -31,7 +31,7 @@
         <tbody>
             {% for ticket in tickets %}
             <tr>
-                <td data-label="Cliente">{{ ticket.client }}</td>
+                <td class="table__client" data-label="Cliente">{{ ticket.client }}</td>
                 <td class="table__subject" data-label="Assunto">{{ ticket.subject }}</td>
                 <td data-label="Status"><span class="badge badge--{{ ticket.status }}">{{ ticket.get_status_display }}</span></td>
                 <td class="table__date" data-label="Aberto em">{{ ticket.created_at|date:"d/m/Y H:i" }}</td>
@@ -39,6 +39,17 @@
                 <td class="table__actions" data-label="Ações">
                     <div class="row-actions">
                         <a class="btn btn--tertiary" href="{% url 'tickets:update' ticket.pk %}">Editar</a>
+                        <form class="status-form" method="post" action="{% url 'tickets:update_status' ticket.pk %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            <label for="status-{{ ticket.pk }}" class="visually-hidden">Status de {{ ticket.subject }}</label>
+                            <select class="input" id="status-{{ ticket.pk }}" name="status">
+                                {% for value, label in status_choices %}
+                                <option value="{{ value }}"{% if value == ticket.status %} selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                            <button class="btn btn--secondary" type="submit">Atualizar</button>
+                        </form>
                     </div>
                 </td>
             </tr>
