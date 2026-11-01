@@ -160,6 +160,23 @@ Resultado esperado: um único aviso, `security.W021` (HSTS sem preload). Ele é 
 
 A saída também mostra `1 silenced`: é o `mail.E001`, silenciado de propósito no bloco de produção. O Django 6.1 trata o backend de e-mail de console como erro no `check --deploy`, mas o Pytende não envia e-mail (fora do escopo), então o backend de console continua.
 
+## Deploy (Docker Swarm)
+
+Produção roda numa VPS Ubuntu 24.04 com Docker Swarm de um nó: `pytende_traefik` (Traefik v3.6, HTTPS com Let's Encrypt via DNS-01 na Cloudflare), `pytende_app` (gunicorn + WhiteNoise, imagem `ghcr.io/pycodebr/pytende`) e `pytende_db` (PostgreSQL 16, volume `pg_data`).
+
+- Primeiro deploy: o `setup_deploy.sh` público do `pycodebr/scsi_v1` prepara a VPS e faz o primeiro deploy, usando `scripts/generate_env.sh` para gerar o `.env` e `scripts/post_deploy.sh` para conferir o resultado.
+- Redeploy (na VPS, como `deploy`): `bash scripts/backup.sh` e depois `bash scripts/deploy.sh`.
+- Só reler o `.env` e reconciliar a stack: `bash scripts/deploy.sh --skip-build`.
+
+O passo a passo completo (o que ter em mãos, respostas do `setup_deploy.sh`, verificação, superusuário, problemas comuns, checklist pós-deploy e o ensaio local num Swarm em Docker-in-Docker) está em [docs/deploy/swarm.md](docs/deploy/swarm.md).
+
+## Backup e restauração
+
+- `scripts/backup.sh` faz o `pg_dump` do banco dentro do container `pytende_db`, compacta em `~/backups/db_AAAAMMDD_HHMMSS.sql.gz` e apaga os arquivos com mais de 30 dias.
+- Na VPS ele roda todo dia às 03:00 pelo cron do usuário `deploy` e também à mão antes de cada redeploy.
+- Uma vez por semana, copie os backups para fora da VPS: `scp deploy@<IP_DA_VPS>:~/backups/db_*.sql.gz ~/Backups/pytende/`.
+- Restauração: pare o app (`docker service scale pytende_app=0`), aplique o arquivo com `gunzip -c ... | docker exec -i <db> psql ...` e suba o app de novo. Os comandos exatos estão em [docs/deploy/swarm.md](docs/deploy/swarm.md#backup).
+
 ## Comandos úteis
 
 ```bash

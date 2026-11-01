@@ -1319,19 +1319,19 @@ Regras para todas as sprints:
 
 **Pré-requisito:** D-02, D-03 e D-07 decididas.
 
-- [ ] Criar `docker-stack.yml` com o conteúdo da seção 14.3.5.
-- [ ] Criar `scripts/deploy.sh` (seção 14.3.6), `scripts/post_deploy.sh` (seção 14.3.7), `scripts/generate_env.sh` (seção 14.3.8) e `scripts/backup.sh` (seção 14.8), com permissão de execução.
-- [ ] Rodar `bash -n` em cada script e corrigir erros de sintaxe.
-- [ ] Criar `docs/deploy/swarm.md` com o conteúdo das seções 14.4 a 14.9 (o que ter em mãos, resposta de cada pergunta do `setup_deploy.sh`, verificação, redeploy, backup, restauração e tabela de problemas comuns).
-- [ ] Executar o ensaio da seção 14.11 e registrar o resultado de CA-49.
-- [ ] Atualizar o README com as seções "Deploy (Docker Swarm)" e "Backup e restauração", apontando para `docs/deploy/swarm.md`.
+- [X] Criar `docker-stack.yml` com o conteúdo da seção 14.3.5. Evidência: cópia literal da seção 14.3.5.
+- [X] Criar `scripts/deploy.sh` (seção 14.3.6), `scripts/post_deploy.sh` (seção 14.3.7), `scripts/generate_env.sh` (seção 14.3.8) e `scripts/backup.sh` (seção 14.8), com permissão de execução. Evidência: pré-requisitos D-02, D-03 e D-07 assumidos pelas recomendações (a), por autorização do Felipe em 2026-11-01 para seguir as recomendações sem perguntar. O `generate_env.sh` não usa arrays associativos, para rodar também no bash 3.2 do macOS no ensaio; ele preserva as chaves existentes (conferido: a `SECRET_KEY` não muda na segunda execução e há backup `.env.bak.*`).
+- [X] Rodar `bash -n` em cada script e corrigir erros de sintaxe. Evidência: os quatro scripts passam em `bash -n`; todos com `-rwxr-xr-x`.
+- [X] Criar `docs/deploy/swarm.md` com o conteúdo das seções 14.4 a 14.9 (o que ter em mãos, resposta de cada pergunta do `setup_deploy.sh`, verificação, redeploy, backup, restauração e tabela de problemas comuns). Evidência: gerado a partir das seções 14.4 a 14.9 e 14.11, com a tabela dos arquivos de deploy no topo.
+- [X] Executar o ensaio da seção 14.11 e registrar o resultado de CA-49. Evidência: CA-49 aprovado num Swarm de um nó em `docker:27-dind`: `pytende_traefik`, `pytende_app` e `pytende_db` em 1/1; `/login/` 200, `/static/css/tokens.css` 200, `http://` 301 para `https://pytende.example.com/`, `/health/` `{"status": "ok"}`, `/` 302 para `/login/?next=/` e header `Strict-Transport-Security: max-age=3600; includeSubDomains`. No mesmo ensaio, `scripts/backup.sh` gerou `db_20261101_170957.sql.gz`, o atendimento de teste foi excluído e voltou após a restauração do procedimento 14.8 (ensaio local do CA-50; o CA-50 de produção continua na Sprint 12). Defeito encontrado e corrigido: dentro da imagem de produção (`DEBUG=False`), 51 dos 66 testes falhavam com 301 por causa do `SECURE_SSL_REDIRECT`; `core/test_runner.py` (`TEST_RUNNER`) desliga só esse redirect durante a suíte. Depois da correção, `Ran 66 tests ... OK` dentro do `pytende_app` da stack e `check --deploy` só com `security.W021`.
+- [X] Atualizar o README com as seções "Deploy (Docker Swarm)" e "Backup e restauração", apontando para `docs/deploy/swarm.md`.
 
 **Testes da sprint:** CA-49 (manual); `python manage.py test` continua passando.
 
 **Definição de pronto:**
-- [ ] No ensaio, os três serviços ficaram 1/1, `/login/` e `/static/css/tokens.css` responderam 200 pelo Traefik e `http://` redirecionou para `https://`.
-- [ ] `docker stack config -c docker-stack.yml` sem erro com o `.env` de ensaio exportado.
-- [ ] `python manage.py test` passando.
+- [X] No ensaio, os três serviços ficaram 1/1, `/login/` e `/static/css/tokens.css` responderam 200 pelo Traefik e `http://` redirecionou para `https://`.
+- [X] `docker stack config -c docker-stack.yml` sem erro com o `.env` de ensaio exportado. Evidência: `stack config OK` dentro do DinD com o `.env` de ensaio exportado pelo mesmo parser literal do `deploy.sh`.
+- [X] `python manage.py test` passando. Evidência: `Ran 66 tests ... OK` no `.venv`, no `.venv` com `DEBUG=False` e no container da stack.
 
 ### Sprint 12 - Deploy na VPS e backup
 

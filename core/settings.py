@@ -92,6 +92,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
+# Mesma suíte no .venv e na imagem de produção (ver core/test_runner.py).
+TEST_RUNNER = 'core.test_runner.PytendeTestRunner'
+
 
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases

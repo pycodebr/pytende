@@ -1,0 +1,139 @@
+version: "3.9"
+
+services:
+  traefik:
+    image: traefik:v3.6
+    command:
+      - "--api.dashboard=true"
+      - "--api.insecure=false"
+      - "--providers.swarm=true"
+      - "--providers.swarm.endpoint=unix:///var/run/docker.sock"
+      - "--providers.swarm.exposedByDefault=false"
+      - "--providers.swarm.network=traefik_public"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.delaybeforecheck=10"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.resolvers=1.1.1.1:53,8.8.8.8:53"
+      - "--entrypoints.websecure.http.tls.certresolver=letsencrypt"
+      - "--entrypoints.websecure.http.tls.domains[0].main=${DOMAIN}"
+      - "--entrypoints.websecure.http.tls.domains[0].sans=*.${DOMAIN}"
+      - "--log.level=INFO"
+      - "--accesslog=true"
+      - "--accesslog.format=json"
+    environment:
+      CF_DNS_API_TOKEN_FILE: /run/secrets/CLOUDFLARE_DNS_API_TOKEN
+    secrets:
+      - CLOUDFLARE_DNS_API_TOKEN
+    ports:
+      - { target: 80, published: 80, protocol: tcp, mode: ingress }
+      - { target: 443, published: 443, protocol: tcp, mode: ingress }
+    volumes:
+      - letsencrypt:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - traefik_public
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: any
+        delay: 10s
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.pytende-traefik.rule=Host(`traefik.${DOMAIN}`)"
+        - "traefik.http.routers.pytende-traefik.entrypoints=websecure"
+        - "traefik.http.routers.pytende-traefik.tls.certresolver=letsencrypt"
+        - "traefik.http.routers.pytende-traefik.service=api@internal"
+        - "traefik.http.routers.pytende-traefik.middlewares=pytende-traefik-auth"
+        - "traefik.http.middlewares.pytende-traefik-auth.basicauth.users=${TRAEFIK_DASHBOARD_AUTH}"
+        - "traefik.http.services.pytende-traefik.loadbalancer.server.port=8080"
+      resources:
+        limits: { cpus: "0.5", memory: 192M }
+        reservations: { cpus: "0.15", memory: 64M }
+
+  app:
+    image: ghcr.io/pycodebr/pytende:latest
+    env_file: .env
+    networks:
+      - traefik_public
+      - pytende_internal
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 180s
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 15s
+        order: start-first
+        failure_action: rollback
+        monitor: 30s
+      rollback_config:
+        parallelism: 1
+        order: stop-first
+      restart_policy:
+        condition: any
+        delay: 10s
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.pytende.rule=Host(`${DOMAIN}`)"
+        - "traefik.http.routers.pytende.entrypoints=websecure"
+        - "traefik.http.routers.pytende.tls=true"
+        - "traefik.http.routers.pytende.tls.certresolver=letsencrypt"
+        - "traefik.http.services.pytende.loadbalancer.server.port=8000"
+        - "traefik.http.services.pytende.loadbalancer.healthcheck.path=/health/"
+        - "traefik.http.services.pytende.loadbalancer.healthcheck.interval=15s"
+        - "traefik.http.services.pytende.loadbalancer.healthcheck.hostname=${DOMAIN}"
+        - "traefik.http.middlewares.pytende-ratelimit.ratelimit.average=100"
+        - "traefik.http.middlewares.pytende-ratelimit.ratelimit.burst=50"
+        - "traefik.http.routers.pytende.middlewares=pytende-ratelimit"
+      resources:
+        limits: { cpus: "1.0", memory: 512M }
+        reservations: { cpus: "0.25", memory: 256M }
+
+  db:
+    image: postgres:16
+    env_file: .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - pytende_internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+        delay: 5s
+      resources:
+        limits: { cpus: "1.0", memory: 1024M }
+        reservations: { cpus: "0.25", memory: 256M }
+
+networks:
+  traefik_public:
+    external: true
+  pytende_internal:
+    external: true
+
+volumes:
+  pg_data:
+  letsencrypt:
+
+secrets:
+  CLOUDFLARE_DNS_API_TOKEN:
+    external: true
