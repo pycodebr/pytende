@@ -143,6 +143,23 @@ O Django cria e apaga o banco `test_pytende` automaticamente.
 
 Se aparecer o aviso `No directory at: .../staticfiles/` do WhiteNoise, é só porque os estáticos ainda não foram coletados. Ele some depois do primeiro `docker compose up` ou de `python manage.py collectstatic --noinput`.
 
+## Checagem de produção
+
+O `core/settings.py` tem um bloco que só vale com `DEBUG=False`: confia no `X-Forwarded-Proto` do Traefik, redireciona HTTP para HTTPS (menos o `/health/`), liga HSTS e marca os cookies de sessão e CSRF como `Secure`.
+
+Para conferir as configurações de produção sem servidor (as variáveis do shell têm prioridade sobre o `.env`):
+
+```bash
+KEY=$(python -c "import secrets; print(secrets.token_urlsafe(50))")
+DEBUG=False SECRET_KEY=$KEY ALLOWED_HOSTS=pytende.example.com,localhost \
+  CSRF_TRUSTED_ORIGINS=https://pytende.example.com SECURE_HSTS_SECONDS=3600 \
+  python manage.py check --deploy
+```
+
+Resultado esperado: um único aviso, `security.W021` (HSTS sem preload). Ele é aceito porque `pycodebr.com.br` não está na lista de preload dos navegadores. Qualquer outro aviso deve ser corrigido.
+
+A saída também mostra `1 silenced`: é o `mail.E001`, silenciado de propósito no bloco de produção. O Django 6.1 trata o backend de e-mail de console como erro no `check --deploy`, mas o Pytende não envia e-mail (fora do escopo), então o backend de console continua.
+
 ## Comandos úteis
 
 ```bash

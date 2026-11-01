@@ -1299,19 +1299,19 @@ Regras para todas as sprints:
 
 **Objetivo:** teste ponta a ponta da jornada, verificação responsiva e settings de produção prontos para o `check --deploy`.
 
-- [ ] Criar `tickets/tests/test_journey.py` com T-95 (CA-45).
-- [ ] Acrescentar em `core/settings.py` o bloco `if not DEBUG:` da seção 8.14.
-- [ ] Rodar `DEBUG=False SECRET_KEY=<chave-de-50-caracteres-gerada> ALLOWED_HOSTS=pytende.example.com,localhost CSRF_TRUSTED_ORIGINS=https://pytende.example.com SECURE_HSTS_SECONDS=3600 .venv/bin/python manage.py check --deploy` (as variáveis do shell têm prioridade sobre o `.env`) e registrar os avisos.
-- [ ] Documentar no README a seção "Checagem de produção" com o comando acima e o único aviso aceito: `security.W021` (HSTS sem preload, porque `pycodebr.com.br` não está na lista de preload). Qualquer outro aviso deve ser corrigido.
-- [ ] Executar a verificação manual de CA-33 em 360px, 768px e 1280px no modo responsivo do navegador e corrigir `app.css` até passar.
-- [ ] Verificar com o teclado (Tab) que todos os campos, botões e links mostram o anel de foco da seção 9.3.
+- [X] Criar `tickets/tests/test_journey.py` com T-95 (CA-45). Evidência: T-95 percorre CA-45 com `createsuperuser`, login real com `next`, duas trocas pela lista e o filtro Concluído com "03/11/2026 14:30".
+- [X] Acrescentar em `core/settings.py` o bloco `if not DEBUG:` da seção 8.14. Evidência: decisão: o Django 6.1 acrescentou o check `mail.E001`, que no `check --deploy` trata o backend de console como erro (e faria o `deploy.sh` abortar com `--fail-level ERROR`). Como o Pytende não envia e-mail (seção 7), o bloco de produção silencia só esse check (`SILENCED_SYSTEM_CHECKS = ['mail.E001']`) e o `MAILERS` de console continua.
+- [X] Rodar `DEBUG=False SECRET_KEY=<chave-de-50-caracteres-gerada> ALLOWED_HOSTS=pytende.example.com,localhost CSRF_TRUSTED_ORIGINS=https://pytende.example.com SECURE_HSTS_SECONDS=3600 .venv/bin/python manage.py check --deploy` (as variáveis do shell têm prioridade sobre o `.env`) e registrar os avisos. Evidência: antes do ajuste: `mail.E001` (erro) e `security.W021`; depois: `System check identified 1 issue (1 silenced)`, só o `security.W021`.
+- [X] Documentar no README a seção "Checagem de produção" com o comando acima e o único aviso aceito: `security.W021` (HSTS sem preload, porque `pycodebr.com.br` não está na lista de preload). Qualquer outro aviso deve ser corrigido.
+- [X] Executar a verificação manual de CA-33 em 360px, 768px e 1280px no modo responsivo do navegador e corrigir `app.css` até passar. Evidência: Chromium headless (Playwright) contra o app do Compose, com 7 atendimentos (um com assunto de 200 caracteres): Login, Lista, Novo e Edição em 360px, 768px e 1280px com `scrollWidth` igual à largura da janela e nenhum botão, link, select ou input com menos de 48px de altura; em 360px cada `<tr>` da lista tem `display: block` (cards). Correções no `app.css`: no tablet, o select de status fica com largura mínima e padding lateral menor para não cortar "Em andamento".
+- [X] Verificar com o teclado (Tab) que todos os campos, botões e links mostram o anel de foco da seção 9.3. Evidência: Tab percorreu Lista e Edição; todos os elementos focados (wordmark, botões, filtros, selects, inputs e links) tinham o `box-shadow` do `--focus-ring`.
 
 **Testes da sprint:** T-95; verificações manuais CA-33 e CA-34.
 
 **Definição de pronto:**
-- [ ] `python manage.py test` passando (todas as sprints), no `.venv` e no container.
-- [ ] `check --deploy` só com o aviso aceito.
-- [ ] CA-33 verificado nas três larguras.
+- [X] `python manage.py test` passando (todas as sprints), no `.venv` e no container. Evidência: `Ran 66 tests ... OK` no `.venv` e `Ran 66 tests ... OK` em `docker compose run --rm app python manage.py test`.
+- [X] `check --deploy` só com o aviso aceito.
+- [X] CA-33 verificado nas três larguras.
 
 ### Sprint 11 - Stack de produção, scripts e ensaio local
 

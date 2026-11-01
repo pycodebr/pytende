@@ -528,6 +528,15 @@ textarea:focus-visible {
         width: 100%;
         min-width: 0;
     }
+
+    .table__actions {
+        min-width: calc(var(--space-2xl) * 5);
+    }
+
+    .status-form .input {
+        padding-right: var(--space-sm);
+        padding-left: var(--space-sm);
+    }
 }
 
 /* ---------- Celular: abaixo de 768px ---------- */

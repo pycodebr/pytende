@@ -157,6 +157,24 @@ LOGIN_REDIRECT_URL = 'tickets:list'
 LOGOUT_REDIRECT_URL = 'accounts:login'
 
 
+# Produção: só vale com DEBUG=False.
+
+if not DEBUG:
+    # O TLS termina no Traefik; o app recebe HTTP interno com X-Forwarded-Proto.
+    # A porta 8000 não é publicada: só o Traefik alcança o app.
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = env.bool('SECURE_SSL_REDIRECT', default=True)
+    # O healthcheck do container bate em http://localhost:8000/health/ sem passar pelo Traefik.
+    SECURE_REDIRECT_EXEMPT = [r'^health/$']
+    SECURE_HSTS_SECONDS = env.int('SECURE_HSTS_SECONDS', default=3600)
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    # O Pytende não envia e-mail (fora do escopo): o backend de console é proposital.
+    # O Django 6.1 trata esse backend como erro no check --deploy (mail.E001).
+    SILENCED_SYSTEM_CHECKS = ['mail.E001']
+
+
 # Messages: níveis do framework de mensagens mapeados para as classes do design system.
 
 MESSAGE_TAGS = {
