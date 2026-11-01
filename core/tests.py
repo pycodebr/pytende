@@ -56,3 +56,19 @@ class EnvExampleTests(SimpleTestCase):
         for key, value in values.items():
             with self.subTest(key=key):
                 self.assertFalse(value.startswith('django-insecure-'))
+
+        dockerignore = Path(settings.BASE_DIR) / '.dockerignore'
+        self.assertTrue(dockerignore.is_file(), '.dockerignore não existe.')
+        self.assertIn(
+            '.env',
+            [line.strip() for line in dockerignore.read_text(encoding='utf-8').splitlines()],
+        )
+
+
+class HealthCheckTests(TestCase):
+    def test_health_returns_ok_without_queries(self):
+        with self.assertNumQueries(0):
+            response = self.client.get('/health/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {'status': 'ok'})

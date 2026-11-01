@@ -1138,24 +1138,24 @@ Regras para todas as sprints:
 
 **Objetivo:** imagem Docker de produção, entrypoint com espera do banco e migrations, endpoint de healthcheck, WhiteNoise e serviço `app` no Compose.
 
-- [ ] Instalar no `.venv` `gunicorn==26.2.0` e `whitenoise==6.12.0` e acrescentá-los ao `requirements.txt`.
-- [ ] Rodar `python manage.py startapp base`; manter `apps.py`, `migrations/__init__.py`, `models.py` (vazio até a Sprint 3) e `tests.py`; apagar `admin.py` e `views.py`.
-- [ ] Acrescentar `'base'` em `LOCAL_APPS`.
-- [ ] Criar `base/management/__init__.py`, `base/management/commands/__init__.py` e `base/management/commands/wait_for_db.py` (seção 8.13).
-- [ ] Criar `core/views.py` com `health_check` (seção 8.9) e a rota `health/` em `core/urls.py` (seção 8.8).
-- [ ] Em `core/settings.py`, definir `STATIC_ROOT`, acrescentar o `WhiteNoiseMiddleware` e `STORAGES` (seção 8.14).
-- [ ] Criar `Dockerfile`, `.dockerignore` e `entrypoint.sh` (seção 14.3); `chmod +x entrypoint.sh`.
-- [ ] Acrescentar o serviço `app` ao `docker-compose.yml` (seção 14.3.4).
-- [ ] Criar T-05 em `core/tests.py` e T-06 em `base/tests.py`; ampliar T-02 com a verificação do `.dockerignore`.
-- [ ] Rodar `docker compose build` e `docker compose up`; conferir `http://localhost:8000/health/` com `{"status": "ok"}` e `http://localhost:8000/admin/` com os estilos do admin carregados.
-- [ ] Rodar `docker compose run --rm app python manage.py test`.
-- [ ] Atualizar o README com a seção "Rodando com Docker Compose" (`docker compose up`, `docker compose run --rm app python manage.py createsuperuser`, logs, como parar).
+- [X] Instalar no `.venv` `gunicorn==26.2.0` e `whitenoise==6.12.0` e acrescentá-los ao `requirements.txt`. Evidência: `pip install` sem erro e `pip check` sem conflitos; `requirements.txt` com 7 pinos em ordem alfabética.
+- [X] Rodar `python manage.py startapp base`; manter `apps.py`, `migrations/__init__.py`, `models.py` (vazio até a Sprint 3) e `tests.py`; apagar `admin.py` e `views.py`. Evidência: o app tem `__init__.py`, `apps.py`, `migrations/__init__.py`, `models.py` (stub do `startapp`, sem models) e `tests.py`; `admin.py` e `views.py` apagados.
+- [X] Acrescentar `'base'` em `LOCAL_APPS`.
+- [X] Criar `base/management/__init__.py`, `base/management/commands/__init__.py` e `base/management/commands/wait_for_db.py` (seção 8.13). Evidência: coberto pelo T-06 (sucesso imprime "Banco de dados disponível."; falha levanta `CommandError` "Banco indisponível após 1s"); o entrypoint usa o comando com `--timeout 90`.
+- [X] Criar `core/views.py` com `health_check` (seção 8.9) e a rota `health/` em `core/urls.py` (seção 8.8). Evidência: T-05 (200, `{"status": "ok"}`, 0 queries) e `curl` em `/health/` retornando 200.
+- [X] Em `core/settings.py`, definir `STATIC_ROOT`, acrescentar o `WhiteNoiseMiddleware` e `STORAGES` (seção 8.14). Evidência: `collectstatic` copiou 130 arquivos; com `DEBUG=False` o WhiteNoise serviu `/static/admin/css/base.css` (200, `text/css`) e, com `Accept-Encoding: gzip`, `Content-Encoding: gzip` (24.538 B para 5.357 B).
+- [X] Criar `Dockerfile`, `.dockerignore` e `entrypoint.sh` (seção 14.3); `chmod +x entrypoint.sh`. Evidência: `sh -n entrypoint.sh` OK, permissão `-rwxr-xr-x`; o `CMD` gunicorn foi exercitado em container com `DEBUG=False` (gunicorn 26.2.0, 2 workers, `/health/` 200).
+- [X] Acrescentar o serviço `app` ao `docker-compose.yml` (seção 14.3.4). Evidência: `docker compose config --quiet` sem erro; `docker compose up` sobe `app` (`0.0.0.0:8000->8000`) e `db` (healthy).
+- [X] Criar T-05 em `core/tests.py` e T-06 em `base/tests.py`; ampliar T-02 com a verificação do `.dockerignore`. Evidência: o T-02 agora também confere a linha `.env` no `.dockerignore`.
+- [X] Rodar `docker compose build` e `docker compose up`; conferir `http://localhost:8000/health/` com `{"status": "ok"}` e `http://localhost:8000/admin/` com os estilos do admin carregados. Evidência: imagem `pytende-app` (303 MB); `/health/` retorna `{"status": "ok"}` (200); `/admin/` redireciona (302) para `/admin/login/`, que responde 200 com `lang="pt-br"` e CSS do admin (`base.css`, `login.css`) servidos com 200.
+- [X] Rodar `docker compose run --rm app python manage.py test`. Evidência: `Ran 4 tests ... OK` dentro do container (rodado com o `app` parado).
+- [X] Atualizar o README com a seção "Rodando com Docker Compose" (`docker compose up`, `docker compose run --rm app python manage.py createsuperuser`, logs, como parar). Evidência: seção criada; também atualizados "Estado atual" e "Testes".
 
 **Testes da sprint:** T-05, T-06, T-02 ampliado.
 
 **Definição de pronto:**
-- [ ] `docker compose up` sobe `app` e `db` sem erro e o entrypoint mostra "Banco de dados disponível." e o resultado do `migrate`.
-- [ ] `python manage.py test` passando no `.venv` e dentro do container (Sprints 1 e 2).
+- [X] `docker compose up` sobe `app` e `db` sem erro e o entrypoint mostra "Banco de dados disponível." e o resultado do `migrate`. Evidência: o log do `app` mostra ">>> Aguardando o banco de dados...", "Banco de dados disponível." e "Running migrations: No migrations to apply." (as 18 migrations da Sprint 1 já estavam aplicadas), seguido do `collectstatic` e do servidor.
+- [X] `python manage.py test` passando no `.venv` e dentro do container (Sprints 1 e 2). Evidência: `Ran 4 tests ... OK` no `.venv` e `Ran 4 tests ... OK` no container (T-01, T-02, T-05, T-06).
 
 ### Sprint 3 - Modelo de domínio e admin
 

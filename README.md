@@ -8,7 +8,7 @@ O escopo completo, as regras de negócio, as telas e o plano de sprints estão n
 
 ## Estado atual
 
-Sprint 1 (fundação de configuração) concluída: o projeto lê as configurações do `.env`, usa PostgreSQL e já tem idioma e fuso de São Paulo. As telas e os atendimentos entram nas próximas sprints.
+Sprints 1 e 2 concluídas: o projeto lê as configurações do `.env`, usa PostgreSQL, tem idioma e fuso de São Paulo e roda em container (Docker Compose), com gunicorn e WhiteNoise prontos para produção. As telas e os atendimentos entram nas próximas sprints.
 
 ## Requisitos
 
@@ -72,6 +72,25 @@ O servidor sobe em http://127.0.0.1:8000/. Por enquanto só o admin do Django (h
 
 Não existe cadastro público: o único usuário do sistema é o criado com `createsuperuser`.
 
+## Rodando com Docker Compose
+
+Além do jeito local acima (`.venv` + banco no Docker), dá para rodar o app inteiro em container. Isso exige o `.env` pronto (passo 2), mas não o `.venv`.
+
+```bash
+docker compose up --build           # sobe app e db (use -d para rodar em segundo plano)
+docker compose run --rm app python manage.py createsuperuser
+docker compose logs -f app          # acompanha o log do app
+docker compose stop                 # para os containers (mantém os dados)
+```
+
+O app fica em http://localhost:8000/ e o healthcheck em http://localhost:8000/health/ (responde `{"status": "ok"}`, sem login e sem consultar o banco).
+
+Ao iniciar, o container executa o `entrypoint.sh`, que: espera o PostgreSQL ficar disponível (`wait_for_db`), aplica as migrations com um lock no banco (seguro com mais de uma réplica) e roda o `collectstatic`. Só depois sobe o servidor. No Compose o servidor é o `runserver` (código da pasta do projeto montado no container, com recarga automática); a imagem em si usa o gunicorn, e é ela que vai para produção.
+
+O container usa o mesmo `.env`, mas troca o host do banco para `db` (nome do serviço no Compose). Por isso o `DATABASE_URL` do `.env` continua apontando para `localhost`, que é o que o `.venv` local usa.
+
+Os arquivos estáticos coletados ficam em `staticfiles/` (ignorado pelo Git) e são servidos pelo WhiteNoise.
+
 ## Testes
 
 Com o PostgreSQL de pé (`docker compose up -d db`):
@@ -80,7 +99,17 @@ Com o PostgreSQL de pé (`docker compose up -d db`):
 python manage.py test
 ```
 
+Ou dentro do container. Pare o `app` antes: o entrypoint de cada container recoleta os estáticos na mesma pasta, e dois ao mesmo tempo podem se atrapalhar.
+
+```bash
+docker compose stop app
+docker compose run --rm app python manage.py test
+docker compose up -d app     # opcional: sobe o app de novo
+```
+
 O Django cria e apaga o banco `test_pytende` automaticamente.
+
+Se aparecer o aviso `No directory at: .../staticfiles/` do WhiteNoise, é só porque os estáticos ainda não foram coletados. Ele some depois do primeiro `docker compose up` ou de `python manage.py collectstatic --noinput`.
 
 ## Comandos úteis
 
