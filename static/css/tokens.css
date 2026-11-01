@@ -1,0 +1,86 @@
+/*
+ * Pytende - tokens do design system.
+ * Os valores vêm de design_system/design-system.html (seção 9 do PRD, base Wise).
+ * Toda cor, fonte, espaçamento, raio e sombra da interface sai daqui;
+ * static/css/app.css usa só var(--...).
+ */
+:root {
+    /* Cores */
+    --color-primary: #9fe870;
+    --color-on-primary: #0e0f0c;
+    --color-primary-active: #cdffad;
+    --color-primary-neutral: #c5edab;
+    --color-primary-pale: #e2f6d5;
+    --color-ink: #0e0f0c;
+    --color-ink-deep: #163300;
+    --color-body: #454745;
+    --color-mute: #868685;
+    --color-canvas: #ffffff;
+    --color-canvas-soft: #e8ebe6;
+    --color-positive: #2ead4b;
+    --color-positive-deep: #054d28;
+    --color-warning: #ffd11a;
+    --color-warning-deep: #b86700;
+    --color-warning-content: #4a3b1c;
+    --color-negative: #d03238;
+    --color-negative-deep: #a72027;
+    --color-negative-darkest: #a7000d;
+    --color-negative-bg: #320707;
+    --color-accent-orange: #ffc091;
+    --color-accent-cyan: #38c8ff;
+
+    /* Fonte */
+    --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+    --font-feature: "calt";
+
+    /* Tipografia: peso tamanho/altura-de-linha família */
+    --text-display-mega: 900 126px/107.1px var(--font-sans);
+    --text-display-xxl: 900 96px/81.6px var(--font-sans);
+    --text-display-xl: 900 64px/54.4px var(--font-sans);
+    --text-display-lg: 400 47px/70.5px var(--font-sans);
+    --text-display-md: 900 40px/34px var(--font-sans);
+    --text-display-sm: 600 32px/38.4px var(--font-sans);
+    --text-display-xs: 600 24px/31.2px var(--font-sans);
+    --text-body-lg: 400 20px/30px var(--font-sans);
+    --text-body-md: 400 16px/24px var(--font-sans);
+    --text-body-md-strong: 600 16px/24px var(--font-sans);
+    --text-body-sm: 400 14px/20px var(--font-sans);
+    --text-body-sm-strong: 600 14px/20px var(--font-sans);
+    --text-caption: 400 12px/16px var(--font-sans);
+    --text-button-md: 600 16px/24px var(--font-sans);
+    --tracking-display-sm: -0.96px;
+    --tracking-display-xs: -0.48px;
+    --tracking-none: 0;
+
+    /* Espaçamento */
+    --space-xxs: 2px;
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 12px;
+    --space-lg: 16px;
+    --space-xl: 24px;
+    --space-2xl: 32px;
+    --space-3xl: 48px;
+
+    /* Raios */
+    --radius-none: 0px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-pill: 9999px;
+
+    /* Sombras e foco */
+    --shadow-ring: 0 0 0 1px #868685;
+    --focus-ring: 0 0 0 2px #ffffff, 0 0 0 3px #0e0f0c;
+
+    /* Contêineres */
+    --container-max: 1200px;
+    --container-form: 720px;
+    --container-auth: 480px;
+
+    /* Alvos de toque e bordas */
+    --touch-min: 48px;
+    --border-width: 1px;
+    --stripe-width: 4px;
+}

@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Design system - Pytende</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap">
+    <!--
+        Referência visual do Pytende (seção 9 do PRD, base Wise).
+        Arquivo autônomo: abre direto no navegador, sem Django.
+        O bloco de tokens abaixo é o mesmo de static/css/tokens.css, com os mesmos valores.
+        O bloco de componentes é o mesmo de static/css/app.css.
+    -->
+    <style>
+/*
+ * Pytende - tokens do design system.
+ * Os valores vêm de design_system/design-system.html (seção 9 do PRD, base Wise).
+ * Toda cor, fonte, espaçamento, raio e sombra da interface sai daqui;
+ * static/css/app.css usa só var(--...).
+ */
+:root {
+    /* Cores */
+    --color-primary: #9fe870;
+    --color-on-primary: #0e0f0c;
+    --color-primary-active: #cdffad;
+    --color-primary-neutral: #c5edab;
+    --color-primary-pale: #e2f6d5;
+    --color-ink: #0e0f0c;
+    --color-ink-deep: #163300;
+    --color-body: #454745;
+    --color-mute: #868685;
+    --color-canvas: #ffffff;
+    --color-canvas-soft: #e8ebe6;
+    --color-positive: #2ead4b;
+    --color-positive-deep: #054d28;
+    --color-warning: #ffd11a;
+    --color-warning-deep: #b86700;
+    --color-warning-content: #4a3b1c;
+    --color-negative: #d03238;
+    --color-negative-deep: #a72027;
+    --color-negative-darkest: #a7000d;
+    --color-negative-bg: #320707;
+    --color-accent-orange: #ffc091;
+    --color-accent-cyan: #38c8ff;
+
+    /* Fonte */
+    --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+    --font-feature: "calt";
+
+    /* Tipografia: peso tamanho/altura-de-linha família */
+    --text-display-mega: 900 126px/107.1px var(--font-sans);
+    --text-display-xxl: 900 96px/81.6px var(--font-sans);
+    --text-display-xl: 900 64px/54.4px var(--font-sans);
+    --text-display-lg: 400 47px/70.5px var(--font-sans);
+    --text-display-md: 900 40px/34px var(--font-sans);
+    --text-display-sm: 600 32px/38.4px var(--font-sans);
+    --text-display-xs: 600 24px/31.2px var(--font-sans);
+    --text-body-lg: 400 20px/30px var(--font-sans);
+    --text-body-md: 400 16px/24px var(--font-sans);
+    --text-body-md-strong: 600 16px/24px var(--font-sans);
+    --text-body-sm: 400 14px/20px var(--font-sans);
+    --text-body-sm-strong: 600 14px/20px var(--font-sans);
+    --text-caption: 400 12px/16px var(--font-sans);
+    --text-button-md: 600 16px/24px var(--font-sans);
+    --tracking-display-sm: -0.96px;
+    --tracking-display-xs: -0.48px;
+    --tracking-none: 0;
+
+    /* Espaçamento */
+    --space-xxs: 2px;
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 12px;
+    --space-lg: 16px;
+    --space-xl: 24px;
+    --space-2xl: 32px;
+    --space-3xl: 48px;
+
+    /* Raios */
+    --radius-none: 0px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-pill: 9999px;
+
+    /* Sombras e foco */
+    --shadow-ring: 0 0 0 1px #868685;
+    --focus-ring: 0 0 0 2px #ffffff, 0 0 0 3px #0e0f0c;
+
+    /* Contêineres */
+    --container-max: 1200px;
+    --container-form: 720px;
+    --container-auth: 480px;
+
+    /* Alvos de toque e bordas */
+    --touch-min: 48px;
+    --border-width: 1px;
+    --stripe-width: 4px;
+}
+
+    </style>
+    <style>
+/*
+ * Pytende - componentes (seção 9.4 do PRD) e faixas responsivas (seção 9.5).
+ * Só usa var(--...) de tokens.css. Nenhum valor de cor fora dos tokens.
+ */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    font: var(--text-body-md);
+    font-feature-settings: var(--font-feature);
+    color: var(--color-ink);
+    background: var(--color-canvas-soft);
+}
+
+body.page-auth {
+    background: var(--color-canvas);
+}
+
+h1,
+h2,
+h3,
+p,
+dl,
+dd {
+    margin: 0;
+}
+
+a {
+    color: var(--color-ink);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.visually-hidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ---------- Barra de navegação ---------- */
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    min-height: 64px;
+    padding: var(--space-md) var(--space-xl);
+    background: var(--color-canvas);
+}
+
+.navbar__brand {
+    font: var(--text-display-xs);
+    font-weight: 900;
+    letter-spacing: var(--tracking-none);
+    color: var(--color-ink);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+}
+
+.navbar__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.navbar__actions form {
+    margin: 0;
+}
+
+/* ---------- Contêiner e cabeçalho de página ---------- */
+
+.container {
+    width: 100%;
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: var(--space-2xl) var(--space-xl) var(--space-3xl);
+}
+
+.container--form {
+    max-width: calc(var(--container-form) + 2 * var(--space-xl));
+}
+
+.page-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+}
+
+.page-title {
+    font: var(--text-display-sm);
+    letter-spacing: var(--tracking-display-sm);
+}
+
+.help-text {
+    font: var(--text-body-sm);
+    color: var(--color-body);
+}
+
+/* ---------- Botões ---------- */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    min-height: var(--touch-min);
+    padding: var(--space-md) var(--space-xl);
+    font: var(--text-button-md);
+    font-feature-settings: var(--font-feature);
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+    border: 0;
+    border-radius: var(--radius-xl);
+    cursor: pointer;
+}
+
+.btn--primary {
+    color: var(--color-on-primary);
+    background: var(--color-primary);
+}
+
+.btn--primary:hover,
+.btn--primary:active {
+    background: var(--color-primary-active);
+}
+
+.btn--secondary {
+    color: var(--color-ink);
+    background: var(--color-canvas-soft);
+}
+
+.btn--secondary:hover,
+.btn--secondary:active {
+    box-shadow: inset 0 0 0 var(--border-width) var(--color-ink);
+}
+
+.btn--tertiary {
+    color: var(--color-ink);
+    background: var(--color-canvas);
+    border: var(--border-width) solid var(--color-ink);
+}
+
+.btn--tertiary:hover,
+.btn--tertiary:active {
+    background: var(--color-canvas-soft);
+}
+
+.btn--block {
+    width: 100%;
+}
+
+/* ---------- Formulários ---------- */
+
+.field {
+    margin-bottom: var(--space-xl);
+}
+
+.field__label {
+    display: block;
+    margin-bottom: var(--space-sm);
+    font: var(--text-body-sm-strong);
+    color: var(--color-ink);
+}
+
+.input,
+.field input,
+.field textarea,
+.field select {
+    display: block;
+    width: 100%;
+    min-height: var(--touch-min);
+    padding: var(--space-md) var(--space-lg);
+    font: var(--text-body-md);
+    font-feature-settings: var(--font-feature);
+    color: var(--color-ink);
+    background: var(--color-canvas);
+    border: var(--border-width) solid var(--color-ink);
+    border-radius: var(--radius-md);
+}
+
+.field textarea {
+    resize: vertical;
+}
+
+.input::placeholder,
+.field input::placeholder,
+.field textarea::placeholder {
+    color: var(--color-mute);
+}
+
+.input--error,
+.input[aria-invalid="true"],
+.field [aria-invalid="true"] {
+    border-color: var(--color-negative);
+}
+
+.field__error {
+    margin: var(--space-xs) 0 0;
+    padding: 0;
+    list-style: none;
+    font: var(--text-body-sm);
+    color: var(--color-negative-deep);
+}
+
+.form-errors {
+    margin-bottom: var(--space-lg);
+    padding: var(--space-md) var(--space-lg);
+    font: var(--text-body-sm);
+    color: var(--color-negative-darkest);
+    background: var(--color-canvas);
+    border: var(--border-width) solid var(--color-negative);
+    border-radius: var(--radius-md);
+}
+
+.form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    margin-top: var(--space-2xl);
+}
+
+/* ---------- Badges de status ---------- */
+
+.badge {
+    display: inline-block;
+    padding: var(--space-xs) var(--space-md);
+    font: var(--text-body-sm-strong);
+    white-space: nowrap;
+    border-radius: var(--radius-pill);
+}
+
+.badge--pending {
+    color: var(--color-warning-content);
+    background: var(--color-warning);
+}
+
+.badge--in_progress {
+    color: var(--color-ink);
+    background: var(--color-accent-cyan);
+}
+
+.badge--completed {
+    color: var(--color-positive-deep);
+    background: var(--color-primary-pale);
+}
+
+/* ---------- Filtro por status ---------- */
+
+.filters {
+    margin-bottom: var(--space-xl);
+}
+
+.filters__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.filter {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--touch-min);
+    padding: var(--space-sm) var(--space-lg);
+    font: var(--text-body-sm-strong);
+    color: var(--color-ink);
+    text-decoration: none;
+    background: var(--color-canvas);
+    border: var(--border-width) solid var(--color-ink);
+    border-radius: var(--radius-pill);
+}
+
+.filter:hover {
+    background: var(--color-canvas-soft);
+}
+
+.filter[aria-current="page"] {
+    color: var(--color-canvas);
+    background: var(--color-ink);
+}
+
+/* ---------- Card de conteúdo ---------- */
+
+.card {
+    padding: var(--space-xl);
+    background: var(--color-canvas);
+    border-radius: var(--radius-xl);
+}
+
+/* ---------- Tabela de atendimentos ---------- */
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th {
+    padding: var(--space-md) var(--space-lg);
+    font: var(--text-caption);
+    text-align: left;
+    text-transform: uppercase;
+    color: var(--color-body);
+    background: var(--color-canvas-soft);
+}
+
+.table th:first-child {
+    border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+.table th:last-child {
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.table td {
+    padding: var(--space-md) var(--space-lg);
+    font: var(--text-body-sm);
+    vertical-align: middle;
+    border-bottom: var(--border-width) solid var(--color-canvas-soft);
+    overflow-wrap: anywhere;
+}
+
+.table tr:last-child td {
+    border-bottom: 0;
+}
+
+.table__subject {
+    font: var(--text-body-md-strong);
+}
+
+.table__date {
+    white-space: nowrap;
+}
+
+.table__empty-date {
+    color: var(--color-mute);
+}
+
+.row-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.status-form {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin: 0;
+}
+
+.status-form .input {
+    width: auto;
+}
+
+/* ---------- Mensagens (toast) ---------- */
+
+.messages {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+}
+
+.message {
+    padding: var(--space-md) var(--space-lg);
+    font: var(--text-body-sm);
+    color: var(--color-ink);
+    background: var(--color-canvas);
+    border-left: var(--stripe-width) solid var(--color-body);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-ring);
+}
+
+.message--success {
+    border-left-color: var(--color-positive);
+}
+
+.message--error {
+    border-left-color: var(--color-negative);
+}
+
+.message--warning {
+    border-left-color: var(--color-warning);
+}
+
+/* ---------- Estado vazio ---------- */
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xl);
+    padding: var(--space-3xl);
+    font: var(--text-body-lg);
+    text-align: center;
+    color: var(--color-ink);
+    background: var(--color-canvas-soft);
+    border-radius: var(--radius-xl);
+}
+
+/* ---------- Login ---------- */
+
+.auth-layout {
+    padding: 0 var(--space-lg);
+}
+
+.auth-card {
+    max-width: var(--container-auth);
+    margin: var(--space-3xl) auto 0;
+    padding: var(--space-xl);
+    background: var(--color-canvas-soft);
+    border-radius: var(--radius-xl);
+}
+
+.auth-brand {
+    font: var(--text-display-md);
+    letter-spacing: var(--tracking-none);
+}
+
+.auth-subtitle {
+    margin: var(--space-sm) 0 var(--space-xl);
+    font: var(--text-body-md);
+    color: var(--color-body);
+}
+
+/* ---------- Bloco de datas (Edição) ---------- */
+
+.dates {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs) var(--space-xl);
+    font: var(--text-body-sm);
+    color: var(--color-body);
+}
+
+.dates div {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.dates dt {
+    font-weight: 400;
+}
+
+/* ---------- Tablet: 768px a 1023px ---------- */
+
+@media (max-width: 1023px) {
+    .table__date {
+        white-space: normal;
+    }
+
+    .table td,
+    .table th {
+        padding: var(--space-md) var(--space-sm);
+    }
+
+    .row-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .status-form {
+        flex-wrap: wrap;
+    }
+
+    .status-form .input {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+}
+
+/* ---------- Celular: abaixo de 768px ---------- */
+
+@media (max-width: 767px) {
+    .navbar {
+        flex-wrap: wrap;
+        padding: var(--space-md) var(--space-lg);
+    }
+
+    .navbar__actions .btn {
+        padding: var(--space-sm) var(--space-lg);
+    }
+
+    .container {
+        padding: var(--space-xl) var(--space-lg) var(--space-2xl);
+    }
+
+    .container--form {
+        max-width: none;
+    }
+
+    .page-title {
+        font: var(--text-display-xs);
+        letter-spacing: var(--tracking-display-xs);
+    }
+
+    .card {
+        padding: var(--space-lg);
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .form-actions .btn {
+        width: 100%;
+    }
+
+    .empty-state {
+        padding: var(--space-xl);
+    }
+
+    /* A tabela vira uma lista de cards. */
+    .card--table {
+        padding: 0;
+        background: transparent;
+    }
+
+    .card--table .empty-state {
+        background: var(--color-canvas);
+    }
+
+    .table,
+    .table tbody,
+    .table tr,
+    .table td {
+        display: block;
+        width: 100%;
+    }
+
+    .table thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+    }
+
+    .table tr {
+        margin-bottom: var(--space-md);
+        padding: var(--space-lg);
+        background: var(--color-canvas);
+        border-radius: var(--radius-lg);
+    }
+
+    .table td {
+        padding: var(--space-xs) 0;
+        border-bottom: 0;
+    }
+
+    .table td + td {
+        margin-top: var(--space-sm);
+    }
+
+    .table td::before {
+        content: attr(data-label);
+        display: block;
+        margin-bottom: var(--space-xxs);
+        font: var(--text-caption);
+        color: var(--color-body);
+    }
+
+    .table td.table__actions::before {
+        display: none;
+    }
+
+    .table__date {
+        white-space: normal;
+    }
+
+    .row-actions,
+    .status-form {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .row-actions .btn,
+    .status-form .btn,
+    .status-form .input {
+        width: 100%;
+    }
+}
+
+    </style>
+    <style>
+
+/* Estilos só da página de documentação (usam apenas os tokens). */
+.ds-page { max-width: var(--container-max); margin: 0 auto; padding: var(--space-3xl) var(--space-xl); }
+.ds-intro { margin-bottom: var(--space-3xl); }
+.ds-intro h1 { font: var(--text-display-md); margin-bottom: var(--space-md); }
+.ds-intro p { color: var(--color-body); max-width: var(--container-form); }
+.ds-section { margin-bottom: var(--space-3xl); }
+.ds-section > h2 { font: var(--text-display-xs); letter-spacing: var(--tracking-display-xs); margin-bottom: var(--space-sm); }
+.ds-section > p { font: var(--text-body-sm); color: var(--color-body); margin-bottom: var(--space-xl); }
+.ds-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--space-md); }
+.ds-swatch, .ds-space, .ds-radius { display: flex; align-items: center; gap: var(--space-md); padding: var(--space-md); background: var(--color-canvas); border-radius: var(--radius-lg); font: var(--text-body-sm); }
+.ds-swatch code, .ds-space code, .ds-radius code, .ds-type code { font: var(--text-body-sm-strong); }
+.ds-swatch span:last-child, .ds-space span:last-child, .ds-radius span:last-child { margin-left: auto; color: var(--color-body); }
+.ds-swatch__chip { width: var(--space-3xl); height: var(--space-3xl); border-radius: var(--radius-md); box-shadow: var(--shadow-ring); flex: none; }
+.ds-type { display: flex; flex-direction: column; gap: var(--space-xs); padding: var(--space-lg) 0; border-bottom: var(--border-width) solid var(--color-canvas); overflow: hidden; }
+.ds-type__meta { display: flex; flex-wrap: wrap; gap: var(--space-md); color: var(--color-body); font: var(--text-body-sm); }
+.ds-type__sample { overflow-wrap: anywhere; }
+.ds-space__bar { height: var(--space-lg); background: var(--color-ink); border-radius: var(--radius-sm); flex: none; }
+.ds-radius__box { width: var(--space-3xl); height: var(--space-3xl); background: var(--color-canvas-soft); border: var(--border-width) solid var(--color-ink); flex: none; }
+.ds-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-md); }
+.ds-demo { padding: var(--space-xl); background: var(--color-canvas); border-radius: var(--radius-xl); }
+.ds-demo--soft { background: var(--color-canvas-soft); }
+.ds-caption { font: var(--text-caption); color: var(--color-body); text-transform: uppercase; margin-bottom: var(--space-sm); }
+.ds-shadow { padding: var(--space-xl); background: var(--color-canvas); border-radius: var(--radius-xl); font: var(--text-body-sm); }
+.ds-frame-mobile { max-width: 390px; padding: var(--space-lg); background: var(--color-canvas-soft); border-radius: var(--radius-xl); box-shadow: var(--shadow-ring); }
+.ds-focus { box-shadow: var(--focus-ring); }
+.ds-hover-primary { background: var(--color-primary-active); }
+.ds-hover-tertiary { background: var(--color-canvas-soft); }
+@media (min-width: 768px) {
+    /* Na demonstração do celular, força o layout de cards mesmo em telas largas. */
+    .ds-frame-mobile .card--table { padding: 0; background: transparent; }
+    .ds-frame-mobile .table, .ds-frame-mobile .table tbody, .ds-frame-mobile .table tr, .ds-frame-mobile .table td { display: block; width: 100%; }
+    .ds-frame-mobile .table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+    .ds-frame-mobile .table tr { margin-bottom: var(--space-md); padding: var(--space-lg); background: var(--color-canvas); border-radius: var(--radius-lg); }
+    .ds-frame-mobile .table td { padding: var(--space-xs) 0; border-bottom: 0; }
+    .ds-frame-mobile .table td + td { margin-top: var(--space-sm); }
+    .ds-frame-mobile .table td::before { content: attr(data-label); display: block; margin-bottom: var(--space-xxs); font: var(--text-caption); color: var(--color-body); }
+    .ds-frame-mobile .table td.table__actions::before { display: none; }
+    .ds-frame-mobile .row-actions, .ds-frame-mobile .status-form { flex-direction: column; align-items: stretch; width: 100%; }
+    .ds-frame-mobile .row-actions .btn, .ds-frame-mobile .status-form .btn, .ds-frame-mobile .status-form .input { width: 100%; }
+    .ds-frame-mobile .table__date { white-space: normal; }
+}
+
+    </style>
+</head>
+<body>
+<main class="ds-page">
+    <header class="ds-intro">
+        <h1>Pytende - design system</h1>
+        <p>Referência visual das quatro telas do Pytende (Login, Lista, Novo e Edição). Os valores vêm do design system da Wise, com Inter no lugar da Wise Sans. Antes de escrever um template, confira aqui o componente e use só os tokens de <code>static/css/tokens.css</code>.</p>
+    </header>
+
+    <section class="ds-section" id="paleta">
+        <h2>Paleta</h2>
+        <p>O verde <code>--color-primary</code> é só para o botão principal (um por tela). Sucesso usa a família <code>positive</code>.</p>
+        <div class="ds-grid">
+            <div class="ds-swatch"><span class="ds-swatch__chip" style="background: var(--color-primary);"></span><code>--color-primary</code><span>#9fe870</span></div>
+            <div class="ds-swatch"><span class="ds-swatch__chip" style="background: var(--color-on-primary);"></span><code>--color-on-primary</code><span>#0e0f0c</span></div>
+            <div class="ds-swatch"><span class="ds-swatch__chip" style="background: var(--color-primary-active);"></span><code>--color-primary-active</code><span>#cdffad</span></div>
+            <div class="ds-swatch"><span class="ds-swatch__chip" style="background: var(--color-primary-neutral);"></span><code>--color-primary-neutral</code><span>#c5edab</span></div>
+            <div class="ds-swatch"><span class="ds-swatch__chip" style="background: var(--color-primary-pale);"></span><code>--color-primary-pale</code><span>#e2f6d5</span></div>
+            <div class="ds-swatch"><span class="ds-swatch__chip" style="background: var(--color-ink);"></span><code>--color-ink</code><span>#0e0f0c</span></div>
+            <div class="ds-swatch"><span class="ds-swatch__chip" style="background: var(--color-ink-deep);"></span><code>--color-ink-deep</code><span>#163300</span></div>
+            <div class="ds-swatch"><span class="ds-swatch__chip" style="background: var(--color-body);"></span><code>--color-body</code><span>#454745</span></div>
+            <div class="ds-swatch"><span class="ds-swatch__chip" style="background: var(--color-mute);"></span><code>--color-mute</code><span>#868685</span></div>
+            <div class="ds-swatch"><span class="ds-swatch__chip" style="background: var(--color-canvas);"></span><code>--color-canvas</code><span>#ffffff</span></div>
+            <div class="ds-swatch"><span class="ds-swatch__chip" style="background: var(--color-canvas-soft);"></span><code>--color-canvas-soft</code><span>#e8ebe6</span></div>
+            <div class="ds-swatch"><span class="ds-swatch__chip" style="background: var(--color-positive);"></span><code>--color-positive</code><span>#2ead4b</span></div>
+            <div class="ds-swatch"><span class="ds-swatch__chip" style="background: var(--color-positive-deep);"></span><code>--color-positive-deep</code><span>#054d28</span></div>
+            <div class="ds-swatch"><span class="ds-swatch__chip" style="background: var(--color-warning);"></span><code>--color-warning</code><span>#ffd11a</span></div>
+            <div class="ds-swatch"><span class="ds-swatch__chip" style="background: var(--color-warning-deep);"></span><code>--color-warning-deep</code><span>#b86700</span></div>
+            <div class="ds-swatch"><span class="ds-swatch__chip" style="background: var(--color-warning-content);"></span><code>--color-warning-content</code><span>#4a3b1c</span></div>
+            <div class="ds-swatch"><span class="ds-swatch__chip" style="background: var(--color-negative);"></span><code>--color-negative</code><span>#d03238</span></div>
+            <div class="ds-swatch"><span class="ds-swatch__chip" style="background: var(--color-negative-deep);"></span><code>--color-negative-deep</code><span>#a72027</span></div>
+            <div class="ds-swatch"><span class="ds-swatch__chip" style="background: var(--color-negative-darkest);"></span><code>--color-negative-darkest</code><span>#a7000d</span></div>
+            <div class="ds-swatch"><span class="ds-swatch__chip" style="background: var(--color-negative-bg);"></span><code>--color-negative-bg</code><span>#320707</span></div>
+            <div class="ds-swatch"><span class="ds-swatch__chip" style="background: var(--color-accent-orange);"></span><code>--color-accent-orange</code><span>#ffc091</span></div>
+            <div class="ds-swatch"><span class="ds-swatch__chip" style="background: var(--color-accent-cyan);"></span><code>--color-accent-cyan</code><span>#38c8ff</span></div>
+        </div>
+    </section>
+
+    <section class="ds-section" id="tipografia">
+        <h2>Escala tipográfica</h2>
+        <p>Família única: Inter 400, 600 e 900, com <code>font-feature-settings: "calt"</code>. Os quatro primeiros tamanhos são de marketing e não aparecem nas telas.</p>
+            <div class="ds-type"><div class="ds-type__meta"><code>--text-display-mega</code><span>126px / 107.1px, 900</span></div><p class="ds-type__sample" style="font: var(--text-display-mega);">Pytende</p></div>
+            <div class="ds-type"><div class="ds-type__meta"><code>--text-display-xxl</code><span>96px / 81.6px, 900</span></div><p class="ds-type__sample" style="font: var(--text-display-xxl);">Pytende</p></div>
+            <div class="ds-type"><div class="ds-type__meta"><code>--text-display-xl</code><span>64px / 54.4px, 900</span></div><p class="ds-type__sample" style="font: var(--text-display-xl);">Pytende</p></div>
+            <div class="ds-type"><div class="ds-type__meta"><code>--text-display-lg</code><span>47px / 70.5px, 400</span></div><p class="ds-type__sample" style="font: var(--text-display-lg);">Atendimentos</p></div>
+            <div class="ds-type"><div class="ds-type__meta"><code>--text-display-md</code><span>40px / 34px, 900 (wordmark do login)</span></div><p class="ds-type__sample" style="font: var(--text-display-md);">Pytende</p></div>
+            <div class="ds-type"><div class="ds-type__meta"><code>--text-display-sm</code><span>32px / 38.4px, 600, -0.96px (título no desktop e tablet)</span></div><p class="ds-type__sample" style="font: var(--text-display-sm); letter-spacing: var(--tracking-display-sm);">Atendimentos</p></div>
+            <div class="ds-type"><div class="ds-type__meta"><code>--text-display-xs</code><span>24px / 31.2px, 600, -0.48px (título no celular)</span></div><p class="ds-type__sample" style="font: var(--text-display-xs); letter-spacing: var(--tracking-display-xs);">Novo atendimento</p></div>
+            <div class="ds-type"><div class="ds-type__meta"><code>--text-body-lg</code><span>20px / 30px, 400 (estado vazio)</span></div><p class="ds-type__sample" style="font: var(--text-body-lg);">Você ainda não tem atendimentos cadastrados.</p></div>
+            <div class="ds-type"><div class="ds-type__meta"><code>--text-body-md</code><span>16px / 24px, 400 (texto padrão)</span></div><p class="ds-type__sample" style="font: var(--text-body-md);">Atualizar o cardápio com os preços de novembro.</p></div>
+            <div class="ds-type"><div class="ds-type__meta"><code>--text-body-md-strong</code><span>16px / 24px, 600 (assunto na lista)</span></div><p class="ds-type__sample" style="font: var(--text-body-md-strong);">Atualizar cardápio do site</p></div>
+            <div class="ds-type"><div class="ds-type__meta"><code>--text-body-sm</code><span>14px / 20px, 400 (células, mensagens)</span></div><p class="ds-type__sample" style="font: var(--text-body-sm);">Padaria Bom Dia</p></div>
+            <div class="ds-type"><div class="ds-type__meta"><code>--text-body-sm-strong</code><span>14px / 20px, 600 (labels, badges, filtros)</span></div><p class="ds-type__sample" style="font: var(--text-body-sm-strong);">Cliente</p></div>
+            <div class="ds-type"><div class="ds-type__meta"><code>--text-caption</code><span>12px / 16px, 400 (cabeçalho da tabela)</span></div><p class="ds-type__sample" style="font: var(--text-caption);">ABERTO EM</p></div>
+            <div class="ds-type"><div class="ds-type__meta"><code>--text-button-md</code><span>16px / 24px, 600 (botões)</span></div><p class="ds-type__sample" style="font: var(--text-button-md);">Cadastrar atendimento</p></div>
+    </section>
+
+    <section class="ds-section" id="espacamentos">
+        <h2>Espaçamentos</h2>
+        <p>Escala de 2px a 48px.</p>
+        <div class="ds-grid">
+            <div class="ds-space"><span class="ds-space__bar" style="width: var(--space-xxs);"></span><code>--space-xxs</code><span>2px</span></div>
+            <div class="ds-space"><span class="ds-space__bar" style="width: var(--space-xs);"></span><code>--space-xs</code><span>4px</span></div>
+            <div class="ds-space"><span class="ds-space__bar" style="width: var(--space-sm);"></span><code>--space-sm</code><span>8px</span></div>
+            <div class="ds-space"><span class="ds-space__bar" style="width: var(--space-md);"></span><code>--space-md</code><span>12px</span></div>
+            <div class="ds-space"><span class="ds-space__bar" style="width: var(--space-lg);"></span><code>--space-lg</code><span>16px</span></div>
+            <div class="ds-space"><span class="ds-space__bar" style="width: var(--space-xl);"></span><code>--space-xl</code><span>24px</span></div>
+            <div class="ds-space"><span class="ds-space__bar" style="width: var(--space-2xl);"></span><code>--space-2xl</code><span>32px</span></div>
+            <div class="ds-space"><span class="ds-space__bar" style="width: var(--space-3xl);"></span><code>--space-3xl</code><span>48px</span></div>
+        </div>
+    </section>
+
+    <section class="ds-section" id="raios">
+        <h2>Raios</h2>
+        <p>Botões e cards usam 24px. Inputs usam 12px. Badges e filtros são pílulas.</p>
+        <div class="ds-grid">
+            <div class="ds-radius"><span class="ds-radius__box" style="border-radius: var(--radius-none);"></span><code>--radius-none</code><span>0px</span></div>
+            <div class="ds-radius"><span class="ds-radius__box" style="border-radius: var(--radius-sm);"></span><code>--radius-sm</code><span>8px</span></div>
+            <div class="ds-radius"><span class="ds-radius__box" style="border-radius: var(--radius-md);"></span><code>--radius-md</code><span>12px</span></div>
+            <div class="ds-radius"><span class="ds-radius__box" style="border-radius: var(--radius-lg);"></span><code>--radius-lg</code><span>16px</span></div>
+            <div class="ds-radius"><span class="ds-radius__box" style="border-radius: var(--radius-xl);"></span><code>--radius-xl</code><span>24px</span></div>
+            <div class="ds-radius"><span class="ds-radius__box" style="border-radius: var(--radius-pill);"></span><code>--radius-pill</code><span>9999px</span></div>
+        </div>
+    </section>
+
+    <section class="ds-section" id="sombras">
+        <h2>Anel de sombra e anel de foco</h2>
+        <p>A elevação vem do contraste de superfície. Só as mensagens usam o anel de sombra. Todo elemento focado pelo teclado mostra o anel de foco.</p>
+        <div class="ds-row">
+            <div class="ds-shadow" style="box-shadow: var(--shadow-ring);"><code>--shadow-ring</code>: 0 0 0 1px #868685</div>
+            <div class="ds-shadow ds-focus"><code>--focus-ring</code>: 0 0 0 2px #ffffff, 0 0 0 3px #0e0f0c</div>
+        </div>
+    </section>
+
+    <section class="ds-section" id="botoes">
+        <h2>Botões</h2>
+        <p>Primário (único CTA por tela), secundário (Cancelar, Atualizar) e terciário (Sair, Editar). Altura mínima de 48px.</p>
+        <div class="ds-demo">
+            <p class="ds-caption">Normal</p>
+            <div class="ds-row">
+                <button class="btn btn--primary" type="button">Cadastrar atendimento</button>
+                <button class="btn btn--secondary" type="button">Cancelar</button>
+                <button class="btn btn--tertiary" type="button">Editar</button>
+            </div>
+            <p class="ds-caption" style="margin-top: var(--space-xl);">Hover</p>
+            <div class="ds-row">
+                <button class="btn btn--primary ds-hover-primary" type="button">Cadastrar atendimento</button>
+                <button class="btn btn--secondary" type="button" style="box-shadow: inset 0 0 0 var(--border-width) var(--color-ink);">Cancelar</button>
+                <button class="btn btn--tertiary ds-hover-tertiary" type="button">Editar</button>
+            </div>
+            <p class="ds-caption" style="margin-top: var(--space-xl);">Foco</p>
+            <div class="ds-row">
+                <button class="btn btn--primary ds-focus" type="button">Cadastrar atendimento</button>
+                <button class="btn btn--secondary ds-focus" type="button">Cancelar</button>
+                <button class="btn btn--tertiary ds-focus" type="button">Editar</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="ds-section" id="inputs">
+        <h2>Inputs</h2>
+        <p>Normal, com foco e com erro. A mensagem de erro fica logo abaixo do campo, ligada a ele por <code>aria-describedby</code>.</p>
+        <div class="ds-demo" style="max-width: var(--container-form);">
+            <div class="field">
+                <label class="field__label" for="ds-client">Cliente</label>
+                <input class="input" id="ds-client" type="text" placeholder="Nome da pessoa ou da empresa">
+            </div>
+            <div class="field">
+                <label class="field__label" for="ds-subject">Assunto</label>
+                <input class="input ds-focus" id="ds-subject" type="text" value="Atualizar cardápio do site">
+            </div>
+            <div class="field">
+                <label class="field__label" for="ds-client-error">Cliente</label>
+                <input class="input input--error" id="ds-client-error" type="text" aria-invalid="true" aria-describedby="ds-client-error_error">
+                <ul class="field__error" id="ds-client-error_error"><li>Informe o cliente.</li></ul>
+            </div>
+            <div class="field">
+                <label class="field__label" for="ds-description">Descrição (opcional)</label>
+                <textarea class="input" id="ds-description" rows="5">Trocar os preços dos pães de novembro.</textarea>
+            </div>
+        </div>
+    </section>
+
+    <section class="ds-section" id="select">
+        <h2>Select</h2>
+        <p>Mesmo estilo do input.</p>
+        <div class="ds-demo" style="max-width: var(--container-form);">
+            <div class="field">
+                <label class="field__label" for="ds-select">Status</label>
+                <select class="input" id="ds-select">
+                    <option value="pending">Pendente</option>
+                    <option value="in_progress" selected>Em andamento</option>
+                    <option value="completed">Concluído</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <section class="ds-section" id="badges">
+        <h2>Badges de status</h2>
+        <p>Pendente em amarelo, Em andamento em ciano (D-10) e Concluído em verde-claro da família positive.</p>
+        <div class="ds-demo ds-row">
+            <span class="badge badge--pending">Pendente</span>
+            <span class="badge badge--in_progress">Em andamento</span>
+            <span class="badge badge--completed">Concluído</span>
+        </div>
+    </section>
+
+    <section class="ds-section" id="filtro">
+        <h2>Filtro por status</h2>
+        <p>Pílulas com o item ativo invertido (fundo escuro) e <code>aria-current="page"</code>.</p>
+        <div class="ds-demo ds-demo--soft">
+            <nav class="filters" aria-label="Filtrar por status" style="margin-bottom: 0;">
+                <ul class="filters__list">
+                    <li><a class="filter" href="#todos">Todos</a></li>
+                    <li><a class="filter" href="#pendente" aria-current="page">Pendente</a></li>
+                    <li><a class="filter" href="#andamento">Em andamento</a></li>
+                    <li><a class="filter" href="#concluido">Concluído</a></li>
+                </ul>
+            </nav>
+        </div>
+    </section>
+
+    <section class="ds-section" id="tabela">
+        <h2>Tabela de atendimentos (desktop)</h2>
+        <p>Dentro do card branco sobre o fundo <code>canvas-soft</code>. Colunas: Cliente, Assunto, Status, Aberto em, Concluído em e Ações.</p>
+        <div class="ds-demo ds-demo--soft">
+                <div class="card card--table">
+                    <table class="table">
+                        <thead>
+                            <tr><th scope="col">Cliente</th><th scope="col">Assunto</th><th scope="col">Status</th><th scope="col">Aberto em</th><th scope="col">Concluído em</th><th scope="col">Ações</th></tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td data-label="Cliente">Padaria Bom Dia</td>
+                            <td class="table__subject" data-label="Assunto">Atualizar cardápio do site</td>
+                            <td data-label="Status"><span class="badge badge--pending">Pendente</span></td>
+                            <td class="table__date" data-label="Aberto em">01/11/2026 12:00</td>
+                            <td class="table__date" data-label="Concluído em"><span class="table__empty-date">—</span></td>
+                            <td class="table__actions" data-label="Ações">
+                                <div class="row-actions">
+                                    <a class="btn btn--tertiary" href="#editar">Editar</a>
+                                    <form class="status-form" method="post" action="#status">
+                                        <label class="visually-hidden" for="ds-status-0">Status de Atualizar cardápio do site</label>
+                                        <select class="input" id="ds-status-0" name="status"><option value="pending" selected>Pendente</option><option value="in_progress">Em andamento</option><option value="completed">Concluído</option></select>
+                                        <button class="btn btn--secondary" type="submit">Atualizar</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-label="Cliente">Studio Lume</td>
+                            <td class="table__subject" data-label="Assunto">Revisar logotipo</td>
+                            <td data-label="Status"><span class="badge badge--in_progress">Em andamento</span></td>
+                            <td class="table__date" data-label="Aberto em">31/10/2026 09:15</td>
+                            <td class="table__date" data-label="Concluído em"><span class="table__empty-date">—</span></td>
+                            <td class="table__actions" data-label="Ações">
+                                <div class="row-actions">
+                                    <a class="btn btn--tertiary" href="#editar">Editar</a>
+                                    <form class="status-form" method="post" action="#status">
+                                        <label class="visually-hidden" for="ds-status-1">Status de Revisar logotipo</label>
+                                        <select class="input" id="ds-status-1" name="status"><option value="pending">Pendente</option><option value="in_progress" selected>Em andamento</option><option value="completed">Concluído</option></select>
+                                        <button class="btn btn--secondary" type="submit">Atualizar</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-label="Cliente">Oficina Dois Irmãos</td>
+                            <td class="table__subject" data-label="Assunto">Publicar página de orçamento</td>
+                            <td data-label="Status"><span class="badge badge--completed">Concluído</span></td>
+                            <td class="table__date" data-label="Aberto em">28/10/2026 16:40</td>
+                            <td class="table__date" data-label="Concluído em">03/11/2026 14:30</td>
+                            <td class="table__actions" data-label="Ações">
+                                <div class="row-actions">
+                                    <a class="btn btn--tertiary" href="#editar">Editar</a>
+                                    <form class="status-form" method="post" action="#status">
+                                        <label class="visually-hidden" for="ds-status-2">Status de Publicar página de orçamento</label>
+                                        <select class="input" id="ds-status-2" name="status"><option value="pending">Pendente</option><option value="in_progress">Em andamento</option><option value="completed" selected>Concluído</option></select>
+                                        <button class="btn btn--secondary" type="submit">Atualizar</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+    </section>
+
+    <section class="ds-section" id="cards-celular">
+        <h2>Lista como cards (celular)</h2>
+        <p>Abaixo de 768px cada linha vira um card, com o rótulo de cada célula acima do valor.</p>
+        <div class="ds-frame-mobile">
+                <div class="card card--table">
+                    <table class="table">
+                        <thead>
+                            <tr><th scope="col">Cliente</th><th scope="col">Assunto</th><th scope="col">Status</th><th scope="col">Aberto em</th><th scope="col">Concluído em</th><th scope="col">Ações</th></tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td data-label="Cliente">Padaria Bom Dia</td>
+                            <td class="table__subject" data-label="Assunto">Atualizar cardápio do site</td>
+                            <td data-label="Status"><span class="badge badge--pending">Pendente</span></td>
+                            <td class="table__date" data-label="Aberto em">01/11/2026 12:00</td>
+                            <td class="table__date" data-label="Concluído em"><span class="table__empty-date">—</span></td>
+                            <td class="table__actions" data-label="Ações">
+                                <div class="row-actions">
+                                    <a class="btn btn--tertiary" href="#editar">Editar</a>
+                                    <form class="status-form" method="post" action="#status">
+                                        <label class="visually-hidden" for="ds-status-0">Status de Atualizar cardápio do site</label>
+                                        <select class="input" id="ds-status-0" name="status"><option value="pending" selected>Pendente</option><option value="in_progress">Em andamento</option><option value="completed">Concluído</option></select>
+                                        <button class="btn btn--secondary" type="submit">Atualizar</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-label="Cliente">Studio Lume</td>
+                            <td class="table__subject" data-label="Assunto">Revisar logotipo</td>
+                            <td data-label="Status"><span class="badge badge--in_progress">Em andamento</span></td>
+                            <td class="table__date" data-label="Aberto em">31/10/2026 09:15</td>
+                            <td class="table__date" data-label="Concluído em"><span class="table__empty-date">—</span></td>
+                            <td class="table__actions" data-label="Ações">
+                                <div class="row-actions">
+                                    <a class="btn btn--tertiary" href="#editar">Editar</a>
+                                    <form class="status-form" method="post" action="#status">
+                                        <label class="visually-hidden" for="ds-status-1">Status de Revisar logotipo</label>
+                                        <select class="input" id="ds-status-1" name="status"><option value="pending">Pendente</option><option value="in_progress" selected>Em andamento</option><option value="completed">Concluído</option></select>
+                                        <button class="btn btn--secondary" type="submit">Atualizar</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-label="Cliente">Oficina Dois Irmãos</td>
+                            <td class="table__subject" data-label="Assunto">Publicar página de orçamento</td>
+                            <td data-label="Status"><span class="badge badge--completed">Concluído</span></td>
+                            <td class="table__date" data-label="Aberto em">28/10/2026 16:40</td>
+                            <td class="table__date" data-label="Concluído em">03/11/2026 14:30</td>
+                            <td class="table__actions" data-label="Ações">
+                                <div class="row-actions">
+                                    <a class="btn btn--tertiary" href="#editar">Editar</a>
+                                    <form class="status-form" method="post" action="#status">
+                                        <label class="visually-hidden" for="ds-status-2">Status de Publicar página de orçamento</label>
+                                        <select class="input" id="ds-status-2" name="status"><option value="pending">Pendente</option><option value="in_progress">Em andamento</option><option value="completed" selected>Concluído</option></select>
+                                        <button class="btn btn--secondary" type="submit">Atualizar</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+    </section>
+
+    <section class="ds-section" id="mensagens">
+        <h2>Mensagens</h2>
+        <p>No topo do conteúdo, abaixo da barra de navegação. Sem fechamento automático.</p>
+        <div class="ds-demo ds-demo--soft">
+            <div class="messages" style="margin-bottom: 0;">
+                <div class="message message--success" role="status">Atendimento cadastrado com sucesso.</div>
+                <div class="message message--error" role="alert">Status inválido. Nenhuma alteração foi feita.</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="ds-section" id="estado-vazio">
+        <h2>Estado vazio</h2>
+        <p>Aparece quando o filtro escolhido não tem atendimentos.</p>
+        <div class="ds-demo">
+            <div class="empty-state">
+                <p>Nenhum atendimento com status "Concluído".</p>
+                <a class="btn btn--primary" href="#novo">Cadastrar atendimento</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="ds-section" id="navegacao">
+        <h2>Barra de navegação</h2>
+        <p>Wordmark à esquerda; "Novo atendimento" (primário) e "Sair" (terciário) à direita.</p>
+        <header class="navbar" style="border-radius: var(--radius-xl);">
+            <a class="navbar__brand" href="#lista">Pytende</a>
+            <div class="navbar__actions">
+                <a class="btn btn--primary" href="#novo">Novo atendimento</a>
+                <form method="post" action="#logout"><button class="btn btn--tertiary" type="submit">Sair</button></form>
+            </div>
+        </header>
+    </section>
+
+    <section class="ds-section" id="login">
+        <h2>Card de login</h2>
+        <p>Card <code>canvas-soft</code> de até 480px sobre a página branca. O erro de login fica acima dos campos.</p>
+        <div class="ds-demo" style="padding-bottom: var(--space-3xl);">
+            <div class="auth-card">
+                <h1 class="auth-brand">Pytende</h1>
+                <p class="auth-subtitle">Controle de atendimentos</p>
+                <div class="form-errors" role="alert">Usuário ou senha inválidos.</div>
+                <div class="field">
+                    <label class="field__label" for="ds-username">Usuário</label>
+                    <input class="input" id="ds-username" type="text" value="responsavel">
+                </div>
+                <div class="field">
+                    <label class="field__label" for="ds-password">Senha</label>
+                    <input class="input" id="ds-password" type="password">
+                </div>
+                <button class="btn btn--primary btn--block" type="button">Entrar</button>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

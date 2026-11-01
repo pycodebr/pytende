@@ -1185,21 +1185,21 @@ Regras para todas as sprints:
 
 **Objetivo:** referência visual `design_system/design-system.html`, tokens CSS e templates base. É a primeira sprint de interface.
 
-- [ ] Criar `design_system/design-system.html` com o conteúdo listado na seção 9.7, usando só os valores da seção 9.
-- [ ] Criar `static/css/tokens.css` com as custom properties da seção 9 (cores, fonte, tipografia, espaçamentos, raios, sombras, contêineres), com um comentário no topo dizendo que os valores vêm de `design_system/design-system.html`.
-- [ ] Criar `static/css/app.css` com os componentes da seção 9.4 e as faixas responsivas da seção 9.5, usando só `var(--...)`, mais a classe `.visually-hidden`.
-- [ ] Em `core/settings.py`, definir `TEMPLATES[0]['DIRS'] = [BASE_DIR / 'templates']`, `STATICFILES_DIRS = [BASE_DIR / 'static']` e `MESSAGE_TAGS` (seção 8.14).
-- [ ] Criar `templates/base.html` e `templates/base_auth.html` (seção 8.11).
-- [ ] Criar `templates/includes/messages.html` e `templates/includes/form_field.html` (seção 8.11).
-- [ ] Acrescentar T-03 e T-04 em `core/tests.py`.
-- [ ] Atualizar o README com a seção "Design system" (onde ficam `design-system.html` e `tokens.css` e a regra de não usar valores fora dos tokens).
+- [X] Criar `design_system/design-system.html` com o conteúdo listado na seção 9.7, usando só os valores da seção 9. Evidência: arquivo autônomo com as 16 seções na ordem da 9.7 (paleta, tipografia, espaçamentos, raios, sombra e foco, botões com hover e foco, inputs normal/foco/erro, select, badges, filtro, tabela desktop, cards do celular, mensagens, estado vazio, navegação e login), com os tokens e os componentes embutidos. Os quatro tokens de marketing (`display-mega`, `xxl`, `xl`, `lg`) usam as alturas de linha do DESIGN.md da Wise (107.1px, 81.6px, 54.4px e 70.5px).
+- [X] Criar `static/css/tokens.css` com as custom properties da seção 9 (cores, fonte, tipografia, espaçamentos, raios, sombras, contêineres), com um comentário no topo dizendo que os valores vêm de `design_system/design-system.html`.
+- [X] Criar `static/css/app.css` com os componentes da seção 9.4 e as faixas responsivas da seção 9.5, usando só `var(--...)`, mais a classe `.visually-hidden`. Evidência: nenhum HEX no arquivo (T-04). Decisão: o Django 6.1 já marca o widget com erro com `aria-invalid="true"` e `aria-describedby="<id>_error"`; o `app.css` aplica a borda de erro por `.input--error` e por `[aria-invalid="true"]`, e o `form_field.html` usa o id nativo `<id>_error` na lista de erros. Na barra do celular, as ações quebram linha para caber em 360px.
+- [X] Em `core/settings.py`, definir `TEMPLATES[0]['DIRS'] = [BASE_DIR / 'templates']`, `STATICFILES_DIRS = [BASE_DIR / 'static']` e `MESSAGE_TAGS` (seção 8.14).
+- [X] Criar `templates/base.html` e `templates/base_auth.html` (seção 8.11).
+- [X] Criar `templates/includes/messages.html` e `templates/includes/form_field.html` (seção 8.11). Evidência: sucesso com `role="status"`, erro com `role="alert"` (via `DEFAULT_MESSAGE_LEVELS`).
+- [X] Acrescentar T-03 e T-04 em `core/tests.py`.
+- [X] Atualizar o README com a seção "Design system" (onde ficam `design-system.html` e `tokens.css` e a regra de não usar valores fora dos tokens).
 
 **Testes da sprint:** T-03, T-04.
 
 **Definição de pronto:**
-- [ ] `design_system/design-system.html` abre direto no navegador e mostra todos os componentes da seção 9.7.
-- [ ] `python manage.py findstatic css/tokens.css` encontra o arquivo.
-- [ ] `python manage.py test` passando (Sprints 1 a 4).
+- [X] `design_system/design-system.html` abre direto no navegador e mostra todos os componentes da seção 9.7. Evidência: aberto via `file://` no Chromium headless em 1280px e 390px; as 16 seções presentes e conferidas por captura.
+- [X] `python manage.py findstatic css/tokens.css` encontra o arquivo. Evidência: `Found 'css/tokens.css' here: .../static/css/tokens.css`.
+- [X] `python manage.py test` passando (Sprints 1 a 4). Evidência: `Ran 21 tests ... OK`.
 
 ### Sprint 5 - Autenticação e lista protegida
 

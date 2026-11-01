@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 from pathlib import Path
 
 import environ
+from django.contrib import messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -76,7 +77,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -135,6 +136,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # WhiteNoise serves the collected static files straight from the app container.
 STORAGES = {
@@ -144,6 +146,17 @@ STORAGES = {
     'staticfiles': {
         'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
     },
+}
+
+
+# Messages: níveis do framework de mensagens mapeados para as classes do design system.
+
+MESSAGE_TAGS = {
+    messages.SUCCESS: 'message--success',
+    messages.ERROR: 'message--error',
+    messages.INFO: 'message--info',
+    messages.WARNING: 'message--warning',
+    messages.DEBUG: 'message--info',
 }
 
 

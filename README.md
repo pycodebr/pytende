@@ -100,6 +100,16 @@ O admin do Django fica em http://localhost:8000/admin/ e só abre para o superus
 - Correções: dá para editar qualquer campo. A data de conclusão é só leitura e segue a mesma regra das telas: é gravada ao concluir e apagada ao reabrir.
 - Exclusão: excluir um atendimento só é possível pelo admin. As telas do Pytende não têm botão de exclusão.
 
+## Design system
+
+A interface segue o design system da Wise (seção 9 do PRD), com a fonte Inter.
+
+- `design_system/design-system.html`: referência visual. Abre direto no navegador, sem Django, e mostra paleta, tipografia, espaçamentos, raios, sombras, botões, inputs, badges, filtro, tabela, cards do celular, mensagens, estado vazio, barra de navegação e card de login.
+- `static/css/tokens.css`: os tokens (cores, tipografia, espaçamentos, raios, sombras e contêineres) como custom properties CSS.
+- `static/css/app.css`: os componentes e as faixas responsivas (celular abaixo de 768px, tablet de 768px a 1023px, desktop a partir de 1024px).
+
+Regra: nenhum valor visual fora dos tokens. O `app.css` só usa `var(--...)` e não tem nenhuma cor HEX. Para mudar um valor, altere o `tokens.css` e o `design-system.html` juntos; o teste `DesignSystemTests` confere que todo HEX do `tokens.css` aparece no `design-system.html` e que o `app.css` não tem HEX.
+
 ## Testes
 
 Com o PostgreSQL de pé (`docker compose up -d db`):

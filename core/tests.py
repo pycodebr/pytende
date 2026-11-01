@@ -1,7 +1,13 @@
+import re
 from pathlib import Path
 
 from django.conf import settings
+from django.contrib.staticfiles import finders
+from django.template.loader import render_to_string
 from django.test import SimpleTestCase, TestCase
+
+HEX_PATTERN = re.compile(r'#[0-9a-fA-F]{3,8}\b')
+GOOGLE_FONTS_URL = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap'
 
 
 class SettingsTests(TestCase):
@@ -72,3 +78,34 @@ class HealthCheckTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {'status': 'ok'})
+
+
+class TemplateTests(SimpleTestCase):
+    def test_base_template_loads_design_tokens(self):
+        html = render_to_string('base.html')
+
+        self.assertIn('lang="pt-br"', html)
+        self.assertIn('css/tokens.css', html)
+        self.assertIn('css/app.css', html)
+        self.assertIn(GOOGLE_FONTS_URL, html)
+
+
+class DesignSystemTests(SimpleTestCase):
+    def test_tokens_match_design_system(self):
+        tokens_path = finders.find('css/tokens.css')
+        app_path = finders.find('css/app.css')
+        self.assertTrue(tokens_path, 'static/css/tokens.css não encontrado.')
+        self.assertTrue(app_path, 'static/css/app.css não encontrado.')
+
+        tokens = Path(tokens_path).read_text(encoding='utf-8')
+        app_css = Path(app_path).read_text(encoding='utf-8')
+        design_system = (
+            Path(settings.BASE_DIR) / 'design_system' / 'design-system.html'
+        ).read_text(encoding='utf-8').lower()
+
+        token_hexes = set(HEX_PATTERN.findall(tokens))
+        self.assertTrue(token_hexes)
+        for hex_value in token_hexes:
+            with self.subTest(hex_value=hex_value):
+                self.assertIn(hex_value.lower(), design_system)
+        self.assertEqual(HEX_PATTERN.findall(app_css), [])

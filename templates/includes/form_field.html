@@ -1,0 +1,14 @@
+{% comment %}
+Renderiza um campo de formulário: label associado, widget e erros do campo.
+O Django 6.x já acrescenta ao widget com erro aria-invalid="true" e
+aria-describedby="<id>_error", que aponta para a lista de erros abaixo.
+{% endcomment %}
+<div class="field">
+    <label class="field__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+    {{ field }}
+    {% if field.errors %}
+    <ul class="field__error" id="{{ field.auto_id }}_error">
+        {% for error in field.errors %}<li>{{ error }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+</div>
