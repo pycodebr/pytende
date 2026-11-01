@@ -1,9 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, UpdateView
 
-from tickets.forms import TicketCreateForm
+from tickets.forms import TicketCreateForm, TicketUpdateForm
 from tickets.models import Ticket, TicketStatus
 
 
@@ -51,3 +51,30 @@ class TicketCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         'page_title': 'Novo atendimento',
         'submit_label': 'Cadastrar atendimento',
     }
+
+
+class TicketUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = Ticket
+    form_class = TicketUpdateForm
+    template_name = 'tickets/ticket_form.html'
+    success_url = reverse_lazy('tickets:list')
+    success_message = 'Atendimento atualizado com sucesso.'
+    extra_context = {
+        'page_title': 'Editar atendimento',
+        'submit_label': 'Salvar alterações',
+    }
+
+    def get_object(self, queryset=None):
+        ticket = super().get_object(queryset)
+        # Datas gravadas no banco. Num POST com erro, o form já aplicou na
+        # instância os valores enviados; o bloco de datas mostra o que está salvo.
+        self.saved_dates = {
+            'created_at': ticket.created_at,
+            'completed_at': ticket.completed_at,
+        }
+        return ticket
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['saved_dates'] = self.saved_dates
+        return context

@@ -1263,19 +1263,19 @@ Regras para todas as sprints:
 
 **Objetivo:** Tela 4 com edição de todos os campos e status, aplicando a regra da data de conclusão.
 
-- [ ] Criar `TicketUpdateForm` em `tickets/forms.py` (seção 8.10).
-- [ ] Criar `TicketUpdateView` (seção 8.9) e o caminho `tickets/<int:pk>/edit/` com nome `update`.
-- [ ] Ajustar `ticket_form.html` para mostrar o bloco de datas quando houver `object` (seção 10.4).
-- [ ] Acrescentar o link "Editar" (botão terciário) na coluna Ações de `ticket_list.html`.
-- [ ] Acrescentar T-54 em `tickets/tests/test_forms.py`.
-- [ ] Acrescentar T-74 a T-79 em `tickets/tests/test_views_form.py`.
-- [ ] Ampliar T-13, T-19 e T-67 para incluir `/tickets/<pk>/edit/`.
+- [X] Criar `TicketUpdateForm` em `tickets/forms.py` (seção 8.10).
+- [X] Criar `TicketUpdateView` (seção 8.9) e o caminho `tickets/<int:pk>/edit/` com nome `update`. Evidência: decisão: o bloco de datas usa `saved_dates`, capturado em `get_object()` antes do form, porque num POST com erro o `full_clean()` do ModelForm já aplicou na instância o status enviado (e com ele a regra da data); assim a tela mostra só o que está gravado.
+- [X] Ajustar `ticket_form.html` para mostrar o bloco de datas quando houver `object` (seção 10.4).
+- [X] Acrescentar o link "Editar" (botão terciário) na coluna Ações de `ticket_list.html`.
+- [X] Acrescentar T-54 em `tickets/tests/test_forms.py`.
+- [X] Acrescentar T-74 a T-79 em `tickets/tests/test_views_form.py`.
+- [X] Ampliar T-13, T-19 e T-67 para incluir `/tickets/<pk>/edit/`.
 
 **Testes da sprint:** T-54, T-74 a T-79, T-13, T-19 e T-67 ampliados.
 
 **Definição de pronto:**
-- [ ] Concluir pela edição mostra a data na lista; reabrir apaga a data.
-- [ ] `python manage.py test` passando (Sprints 1 a 8).
+- [X] Concluir pela edição mostra a data na lista; reabrir apaga a data. Evidência: Chromium headless: ao salvar com "Concluído", a lista mostrou o badge "Concluído" e a data 01/11/2026 13:55 em "Concluído em" (e o bloco de datas da edição também); ao voltar para "Pendente", a lista mostrou `—`.
+- [X] `python manage.py test` passando (Sprints 1 a 8). Evidência: `Ran 56 tests ... OK`.
 
 ### Sprint 9 - Troca de status pela lista
 

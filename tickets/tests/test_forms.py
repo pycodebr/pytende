@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from tickets.forms import TicketCreateForm
+from tickets.forms import TicketCreateForm, TicketUpdateForm
 
 
 class TicketFormTests(TestCase):
@@ -45,3 +45,17 @@ class TicketFormTests(TestCase):
 
         valid = TicketCreateForm(data={'client': 'a' * 150, 'subject': 'a' * 200})
         self.assertTrue(valid.is_valid(), valid.errors)
+
+    def test_update_form_fields_and_status_choices(self):
+        form = TicketUpdateForm()
+        self.assertEqual(list(form.fields), ['client', 'subject', 'description', 'status'])
+        self.assertEqual(form.fields['status'].label, 'Status')
+
+        invalid = TicketUpdateForm(data={'client': 'Cliente', 'subject': 'Assunto', 'status': 'archived'})
+        self.assertFalse(invalid.is_valid())
+        self.assertIn('status', invalid.errors)
+
+        for status in ('pending', 'in_progress', 'completed'):
+            with self.subTest(status=status):
+                valid = TicketUpdateForm(data={'client': 'Cliente', 'subject': 'Assunto', 'status': status})
+                self.assertTrue(valid.is_valid(), valid.errors)

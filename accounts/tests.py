@@ -5,6 +5,8 @@ from django.contrib.auth import get_user_model
 from django.core.management import call_command
 from django.test import TestCase
 
+from tickets.models import Ticket
+
 PASSWORD = 'senha-de-teste-123'
 
 
@@ -16,9 +18,13 @@ class AuthTests(TestCase):
             email='responsavel@example.com',
             password=PASSWORD,
         )
+        cls.ticket = Ticket.objects.create(
+            client='Padaria Bom Dia',
+            subject='Atualizar cardápio do site',
+        )
 
     def private_urls(self):
-        return ['/', '/tickets/new/']
+        return ['/', '/tickets/new/', f'/tickets/{self.ticket.pk}/edit/']
 
     def test_superuser_created_by_command_can_log_in(self):
         self.user.delete()
@@ -55,6 +61,7 @@ class AuthTests(TestCase):
         expected = {
             '/?status=pending': '/login/?next=/%3Fstatus%3Dpending',
             '/tickets/new/': '/login/?next=/tickets/new/',
+            f'/tickets/{self.ticket.pk}/edit/': f'/login/?next=/tickets/{self.ticket.pk}/edit/',
         }
         for url, redirect in expected.items():
             with self.subTest(url=url):

@@ -20,3 +20,10 @@ class TicketCreateForm(forms.ModelForm):
             'client': forms.TextInput(attrs={'placeholder': 'Nome da pessoa ou da empresa'}),
             'description': forms.Textarea(attrs={'rows': 5}),
         }
+
+
+class TicketUpdateForm(TicketCreateForm):
+    class Meta(TicketCreateForm.Meta):
+        fields = ['client', 'subject', 'description', 'status']
+        labels = {**TicketCreateForm.Meta.labels, 'status': 'Status'}
+        widgets = {**TicketCreateForm.Meta.widgets, 'status': forms.Select}

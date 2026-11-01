@@ -136,4 +136,4 @@ class TicketListViewTests(TestCase):
                 self.assertNotContains(response, 'delete')
 
     def screens_without_delete(self, ticket):
-        return ['/']
+        return ['/', f'/tickets/{ticket.pk}/edit/']
