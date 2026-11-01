@@ -8,7 +8,7 @@ O escopo completo, as regras de negócio, as telas e o plano de sprints estão n
 
 ## Estado atual
 
-Sprints 1 a 3 concluídas: o projeto lê as configurações do `.env`, usa PostgreSQL, tem idioma e fuso de São Paulo e roda em container (Docker Compose), com gunicorn e WhiteNoise prontos para produção. O model `Ticket` (atendimento) já existe com as regras de status e data de conclusão, e pode ser consultado e corrigido pelo admin. As telas entram nas próximas sprints.
+Sprints 1 a 11 concluídas. O sistema está completo e roda localmente com Docker Compose: login, Lista de atendimentos com filtro por status e troca de status em cada linha, Novo atendimento e Edição, com a data de conclusão gravada ao concluir e apagada ao reabrir, e o admin para busca, correções e exclusão. A stack de produção (Docker Swarm + Traefik + PostgreSQL), os scripts de deploy e de backup e o guia em `docs/deploy/swarm.md` foram ensaiados num Swarm local. Falta só a Sprint 12: o deploy real na VPS, feito quando o Felipe publicar o sistema.
 
 ## Requisitos
 

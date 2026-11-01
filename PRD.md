@@ -7,7 +7,9 @@
 | Data | 2026-11-01 |
 | Método | Spec-Driven Development: cada sprint é executada lendo só este documento |
 | Repositório | `https://github.com/pycodebr/pytende` (branch `main`) |
-| Status | Planejamento. Nada foi implementado. Todos os checkboxes começam desmarcados. |
+| Status | Sprints 1 a 11 concluídas e publicadas em `origin/main` (66 testes passando no `.venv` e na imagem de produção; stack ensaiada num Swarm local). Sprint 12 (deploy na VPS) pendente, a ser feita quando o Felipe for publicar. |
+
+Execução (2026-11-01): Felipe autorizou executar as Sprints 3 a 11 seguindo as recomendações do PRD sem novas perguntas, com commit e push por sprint, e pediu para deixar a Sprint 12 para quando for fazer o deploy de fato. As decisões tomadas na execução estão registradas na linha de evidência de cada tarefa.
 
 Histórico: a versão 1.0 usava a Rota A (SQLite + PythonAnywhere). Na versão 1.1, Felipe escolheu a Rota B (PostgreSQL, Docker Compose no desenvolvimento e Docker Swarm com Traefik em VPS). Requisitos funcionais, regras de negócio e telas não mudaram.
 
