@@ -6,6 +6,7 @@
 <header class="navbar">
     <a class="navbar__brand" href="{% url 'tickets:list' %}">Pytende</a>
     <div class="navbar__actions">
+        <a class="btn {% block nav_new_class %}btn--primary{% endblock %}" href="{% url 'tickets:create' %}">Novo atendimento</a>
         <form method="post" action="{% url 'accounts:logout' %}">
             {% csrf_token %}
             <button class="btn btn--tertiary" type="submit">Sair</button>

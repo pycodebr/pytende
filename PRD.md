@@ -1230,19 +1230,19 @@ Regras para todas as sprints:
 
 **Objetivo:** Tela 3 funcionando com validação, mensagem e status inicial pendente.
 
-- [ ] Criar `TicketCreateForm` em `tickets/forms.py` (seção 8.10).
-- [ ] Criar `TicketCreateView` (seção 8.9) e o caminho `tickets/new/` com nome `create`.
-- [ ] Criar `templates/tickets/ticket_form.html` (seção 10.3), usando `includes/form_field.html` para cada campo.
-- [ ] Acrescentar o botão primário "Novo atendimento" na barra de `base_app.html`.
-- [ ] Criar `tickets/tests/test_forms.py` com T-50 a T-53 e T-56.
-- [ ] Criar `tickets/tests/test_views_form.py` com T-70 a T-73.
-- [ ] Ampliar T-13 e T-19 para incluir `/tickets/new/`.
+- [X] Criar `TicketCreateForm` em `tickets/forms.py` (seção 8.10).
+- [X] Criar `TicketCreateView` (seção 8.9) e o caminho `tickets/new/` com nome `create`.
+- [X] Criar `templates/tickets/ticket_form.html` (seção 10.3), usando `includes/form_field.html` para cada campo. Evidência: campos renderizados um a um por `includes/form_field.html`; texto de ajuda "Todo atendimento novo começa como Pendente." só no cadastro.
+- [X] Acrescentar o botão primário "Novo atendimento" na barra de `base_app.html`. Evidência: decisão: nas telas de formulário o mesmo botão aparece como terciário (bloco `nav_new_class`), para manter um único botão verde por tela (regra 9.6), já que o CTA ali é "Cadastrar atendimento" ou "Salvar alterações".
+- [X] Criar `tickets/tests/test_forms.py` com T-50 a T-53 e T-56.
+- [X] Criar `tickets/tests/test_views_form.py` com T-70 a T-73. Evidência: T-73 confere `aria-invalid="true"` e `aria-describedby="id_client_error"`/`"id_subject_error"` apontando para as listas de erro.
+- [X] Ampliar T-13 e T-19 para incluir `/tickets/new/`.
 
 **Testes da sprint:** T-50 a T-53, T-56, T-70 a T-73, T-13 e T-19 ampliados.
 
 **Definição de pronto:**
-- [ ] Cadastrar pelo navegador volta para a lista com a mensagem e o atendimento como "Pendente".
-- [ ] `python manage.py test` passando (Sprints 1 a 6).
+- [X] Cadastrar pelo navegador volta para a lista com a mensagem e o atendimento como "Pendente". Evidência: Chromium headless contra o app do Compose: envio vazio mostrou "Informe o cliente." e "Informe o assunto." junto dos campos; envio válido voltou para `/` com "Atendimento cadastrado com sucesso." e a linha com o badge "Pendente".
+- [X] `python manage.py test` passando (Sprints 1 a 6). Evidência: `Ran 43 tests ... OK`.
 
 ### Sprint 7 - Filtro por status e estado vazio
 

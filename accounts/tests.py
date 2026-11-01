@@ -18,7 +18,7 @@ class AuthTests(TestCase):
         )
 
     def private_urls(self):
-        return ['/']
+        return ['/', '/tickets/new/']
 
     def test_superuser_created_by_command_can_log_in(self):
         self.user.delete()
@@ -54,6 +54,7 @@ class AuthTests(TestCase):
     def test_anonymous_user_is_redirected_to_login_with_next(self):
         expected = {
             '/?status=pending': '/login/?next=/%3Fstatus%3Dpending',
+            '/tickets/new/': '/login/?next=/tickets/new/',
         }
         for url, redirect in expected.items():
             with self.subTest(url=url):
